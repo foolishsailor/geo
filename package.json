@@ -1,0 +1,20 @@
+    {
+        "name": "geo",
+        "description": "Collection of useful functions when dealing with Navigation and Position data",
+        "version": "0.0.1",
+        "main": "index.js",
+        "scripts": {
+          "test": "echo \"Error: no test specified\" && exit 1"
+        },
+        "repository": {
+          "type": "git",
+          "url": "https://github.com/foolishsailor/geo.git"
+        },
+        "keywords": [],
+        "author": "",
+        "license": "MIT",
+        "bugs": {
+          "url": "https://github.com/foolishsailor/geo/issues"
+        },
+        "homepage": "https://github.com/foolishsailor/geo"
+      }
