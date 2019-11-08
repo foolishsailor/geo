@@ -789,15 +789,32 @@ String.prototype.parseDeg = function() {
     var r = new Array();
     for (var i = 0; i < n_dest; i++) r.push(source[index[i]]);
 
-    console.log("new array", r);
     return r;
   }
 
   return {
-    getAvgOfBearings: getAvgOfBearings,
-    getBoundsOfData: getBoundsOfData,
-    getMinMaxAvgFromArray: getMinMaxAvgFromArray,
-    humanTime: humanTime
+    getAvgOfBearings,
+    getBoundsOfData,
+    getMinMaxAvgFromArray,
+    humanTime,
+    getBearingBetweenTwoPoints,
+    getBearingDiff,
+    addHeading,
+    invertHDG,
+    findMiddleAngle,
+    parseDMS,
+    convertDMSToDD,
+    getDistanceCos,
+    getDistanceHaversine,
+    getDistanceFromSpeedTime,
+    getPostionFromBearingAndDistance,
+    getIntersection,
+    crossTrackDistanceTo,
+    getMinMaxAvgFromArray,
+    mercator,
+    humanTime,
+    GDP_smoother
+
   };
 })();
 
