@@ -1,2 +1,2 @@
 # geo
-Collection of geographical and navigation related fucntions
+Collection of geographical and navigation related functions
