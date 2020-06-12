@@ -39,6 +39,27 @@ module.exports = (() => {
     return results;
   };
 
+  _testPositionStringRanges = (pos, dms) => {
+    //check deg boundaries
+    if (Math.abs(dms[0]) > 180) throw "Malformed Position Data";
+
+    if (/[NS]/i.test(pos) && Math.abs(dms[0]) > 90)
+      throw "Malformed Position Data";
+
+    switch (
+      dms.length // convert to decimal degrees...
+    ) {
+      case 3: // interpret 3-part result as d/m/s
+        if (dms[1] > 60 || dms[2] > 60) throw "Malformed Position Data";
+
+      case 2: // interpret 2-part result as d/m
+        if (dms[1] > 60) throw "Malformed Position Data";
+
+      default:
+        return;
+    }
+  };
+
   // convert degrees to radians
   Number.prototype.toRad = function () {
     return (this * Math.PI) / 180;
@@ -56,18 +77,18 @@ module.exports = (() => {
 
   // convert numeric degrees to human readable deg/min/sec - i.e. 41.34445 = 041°20'40"
   Number.prototype.toDMS = function () {
-    let d = Math.abs(this);
-    d += 1 / 7200; // add to second for rounding
-    let deg = Math.floor(d);
-    let min = Math.floor((d - deg) * 60);
-    let sec = Math.floor((d - deg - min / 60) * 3600);
+    let decimal = Math.abs(this);
+    decimal += 1 / 7200; // add to second for rounding
+    let deg = Math.floor(decimal);
+    let min = Math.floor((decimal - deg) * 60);
+    let sec = Number(((decimal - deg - min / 60) * 3600).toFixed(2));
 
     // add leading zeros if required
     if (deg < 100) deg = "0" + deg;
     if (deg < 10) deg = "0" + deg;
     if (min < 10) min = "0" + min;
     if (sec < 10) sec = "0" + sec;
-    return `${deg}\u00B0${min}'${sec}"`;
+    return `${deg}\u00B0${min}\u0027${sec}\u0022`;
   };
 
   Number.prototype.toLat = function () {
@@ -78,13 +99,6 @@ module.exports = (() => {
   Number.prototype.toLon = function () {
     // convert numeric degrees to deg/min/sec longitude
     return this.toDMS() + (this > 0 ? "E" : "W");
-  };
-
-  Number.prototype.toPrecision = function (fig) {
-    if (this == 0) return 0; // trailing zeros in place of exponential notation
-    let scale = Math.ceil(Math.log(this) * Math.LOG10E);
-    let mult = Math.pow(10, fig - scale);
-    return Math.round(this * mult) / mult;
   };
 
   /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  */
@@ -111,28 +125,45 @@ module.exports = (() => {
     let deg;
     let degLL = this.replace(/^-/, "").replace(/[NSEW]/i, ""); // strip off any sign or compass dir'n
     let dms = degLL.split(/[^0-9.,]+/); // split out separate d/m/s
-    for (let i in dms) if (dms[i] == "") dms.splice(i, 1); // remove empty elements (see note below)
-    switch (
-      dms.length // convert to decimal degrees...
-    ) {
-      case 3: // interpret 3-part result as d/m/s
-        deg = dms[0] / 1 + dms[1] / 60 + dms[2] / 3600;
-        break;
-      case 2: // interpret 2-part result as d/m
-        deg = dms[0] / 1 + dms[1] / 60;
-        break;
-      case 1: // decimal or non-separated dddmmss
-        if (/[NS]/i.test(this)) degLL = "0" + degLL; // - normalise N/S to 3-digit degrees
-        deg =
-          dms[0].slice(0, 3) / 1 +
-          dms[0].slice(3, 5) / 60 +
-          dms[0].slice(5) / 3600;
-        break;
-      default:
-        return NaN;
+
+    try {
+      //If find '' anywhere but at end of array then malformed data exists so throw error
+      dms.forEach((e, i) => {
+        if (e == "") {
+          if (i < dms.length - 1) {
+            throw "Malformed Position Data";
+          }
+          dms.splice(i, 1);
+        }
+      });
+
+      _testPositionStringRanges(this, dms);
+
+      switch (
+        dms.length // convert to decimal degrees...
+      ) {
+        case 3: // interpret 3-part result as d/m/s
+          deg = dms[0] / 1 + dms[1] / 60 + dms[2] / 3600;
+          break;
+        case 2: // interpret 2-part result as d/m
+          deg = dms[0] / 1 + dms[1] / 60;
+          break;
+        case 1: // decimal or non-separated dddmmss
+          if (/[NS]/i.test(this)) degLL = "0" + degLL; // - normalise N/S to 3-digit degrees
+          deg =
+            dms[0].slice(0, 3) / 1 +
+            dms[0].slice(3, 5) / 60 +
+            dms[0].slice(5) / 3600;
+          break;
+        default:
+          return NaN;
+      }
+    } catch (err) {
+      return NaN;
     }
+
     if (/^-/.test(this) || /[WS]/i.test(this)) deg = -deg; // take '-', west and south as -ve
-    return deg;
+    return Number(deg.toFixed(7));
   };
 
   /*------------------------------------------
