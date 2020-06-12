@@ -1,17 +1,27 @@
 # geo
-Collection of geographical and navigation related helper functions.  All functions are well documented and inputs and outputs should be straight forward.
+Collection of geographical and navigation related helper functions.  
+Functions include:
+* Various distance calculations: Between 2 points, Time and Heading...
+* Various position calculations: Intersection from two routes, Bearing and Distance...
+* Handles normalizing bearings: Avg of bearings, Median Bearing, Bearing Difference...
+* Number utility helpers: toRad, toDeg, toBrng...
+* GPS conversion utilities
+...more
 
 *** in development ***
 
 ## API
+
+### Usage
+All functions are well 
 ### Bearings and Angles
 #### getAvgOfBearings
-Return average of all bearing values in array normalized for compass bearings. 
+Return average of all bearing values in array normalized for compass bearings.  
 
 #### getBearingBetweenTwoPoints
 Calculate bearing from position 1 to position 2 in degrees.  Latitude and Longitude must be in Decimal format.  i.e.  51.13342.  
 
-If using  DMS format i.e. 35° 24' 32.22'' then run through conversion function to get Decimal format.
+If using  DMS format i.e. 35° 24' 32.22" then run through conversion function to get Decimal format.
 see [parseDMS](#parsedms) below
 
 #### getBearingDiff
@@ -37,14 +47,20 @@ Calculate distance between two points in km.  This method generates more accurat
 #### getDistanceFromSpeedTime
 Calculate distance from speed (in kM/hour) and Time (seconds)
  
+#### crossTrackDistanceTo
+Returns (signed) distance in Km from a given Lat/Lon point to the nearest point on a route that is defined by start-point and end-point.  Gives option to use Haversisne calculation whcih will work with longer routes and takes into account Great Circle calcs - or Cosine distance which works better for very short distances less than a couple Km.
+
 ### Position
 #### getPostionFromBearingAndDistance
 Calculate a lat/lon position in decimal format point from;
   1. Existing lat/lon point in decimal format
-  2. Bearing from intial point in degrees
+  2. Bearing from initial point in degrees
   3. Distance travelled from intial point in KM
  
- 
+#### getIntersection
+Calculate intersection point between two lines/routes in lat and lon.  The routes are not required to overlap to for the calculation to work.
+
+
 ### Conversion Utilities
 
 #### parseDMS
@@ -54,15 +70,8 @@ Calculate a lat/lon position in decimal format point from;
 ### getMinMaxAvgFromArray
 
 
-
-
-
-
-
-
-
 ### getIntersection
-### crossTrackDistanceTo
+
 ### getMinMaxAvgFromArray
 ### mercator
 ### humanTime
