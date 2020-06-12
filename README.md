@@ -10,10 +10,24 @@ Functions include:
 
 *** in development ***
 
-## API
+## Installation
 
+npm install geo
+
+ --- or ---
+ 
+include in browser
+
+```<script src="../dist/geo.js"></script>```
+
+## Live Example
+
+Insert link here to git pages 
+
+## API
 ### Usage
-All functions are well 
+All functions are well documented in code and inputs and outputs for each function are straightforward.  Most functions also have error trapping to check for out of range bad values and will return an error message.
+
 ### Bearings and Angles
 #### getAvgOfBearings
 Return average of all bearing values in array normalized for compass bearings.  
@@ -64,7 +78,7 @@ Calculate intersection point between two lines/routes in lat and lon.  The route
 ### Conversion Utilities
 
 #### parseDMS
-#### convertDMSToDD
+
 #### getBoundsOfData
 
 ### getMinMaxAvgFromArray
