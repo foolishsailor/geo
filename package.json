@@ -1,20 +1,32 @@
-    {
-        "name": "geo",
-        "description": "Collection of useful functions when dealing with Navigation and Position data",
-        "version": "0.0.1",
-        "main": "index.js",
-        "scripts": {
-          "test": "echo \"Error: no test specified\" && exit 1"
-        },
-        "repository": {
-          "type": "git",
-          "url": "https://github.com/foolishsailor/geo.git"
-        },
-        "keywords": [],
-        "author": "",
-        "license": "MIT",
-        "bugs": {
-          "url": "https://github.com/foolishsailor/geo/issues"
-        },
-        "homepage": "https://github.com/foolishsailor/geo"
-      }
+{
+  "name": "geo",
+  "description": "Collection of useful functions when dealing with Navigation and Position data",
+  "version": "0.0.1",
+  "main": "dist/geo.js",
+  "scripts": {
+    "test": "jest",
+    "build:umd-dev": "webpack --output-filename geo.js --mode development",
+    "build:umd-production": "webpack --output-filename geo.min.js --mode production"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/foolishsailor/geo.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/foolishsailor/geo/issues"
+  },
+  "homepage": "https://github.com/foolishsailor/geo",
+  "directories": {
+    "test": "test"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "jest": "^26.0.1",
+    "rewire": "^5.0.0",
+    "webpack": "^4.43.0",
+    "webpack-cli": "^3.3.11"
+  }
+}
