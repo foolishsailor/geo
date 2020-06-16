@@ -96,146 +96,61 @@ return /******/ (function(modules) { // webpackBootstrap
 /************************************************************************/
 /******/ ({
 
-/***/ "./src/index.js":
-/*!**********************!*\
-  !*** ./src/index.js ***!
-  \**********************/
+/***/ "./node_modules/webpack/buildin/module.js":
+/*!***********************************!*\
+  !*** (webpack)/buildin/module.js ***!
+  \***********************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = (() => {
-  //constants
-  const KM_TO_NM = 0.539957,
-    NM_TO_KM = 1.852,
-    HOUR = 3600,
-    KM_IN_DEG = 111.12,
-    NM_IN_DEG = 60,
-    NM_TO_FEET = 6076,
-    KM_TO_FEET = 3280.84,
-    RADIUS_IN_M = 6378137, //radius earth at equator
-    MEAN_RADIUS_IM_M = 6371000; //earth mean radius
+module.exports = function(module) {
+	if (!module.webpackPolyfill) {
+		module.deprecate = function() {};
+		module.paths = [];
+		// module.parent = undefined by default
+		if (!module.children) module.children = [];
+		Object.defineProperty(module, "loaded", {
+			enumerable: true,
+			get: function() {
+				return module.l;
+			}
+		});
+		Object.defineProperty(module, "id", {
+			enumerable: true,
+			get: function() {
+				return module.i;
+			}
+		});
+		module.webpackPolyfill = 1;
+	}
+	return module;
+};
 
-  /**
-   * Inspects array of bearings and returns array of items that are not valid bearing values.
-   * If all values are valid then returns an array with length 0
-   * @param {array} bearings
-   */
-  _checkBearings = (bearings) => {
-    let results = [];
-    bearings.forEach(function (bearing, i) {
-      if (isNaN(bearing) || bearing >= 360 || bearing < 0)
-        results.push({
-          index: i,
-          value: bearing,
-        });
-    });
 
-    return results;
-  };
+/***/ }),
 
-  // extend Number object with methods for converting degrees/radians
+/***/ "./src/bearings.js":
+/*!*************************!*\
+  !*** ./src/bearings.js ***!
+  \*************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
 
-  Number.prototype.toRad = function () {
-    // convert degrees to radians
-    return (this * Math.PI) / 180;
-  };
+const {
+  validateBearings,
+  processPointData,
+} = __webpack_require__(/*! ./validateData/validation */ "./src/validateData/validation.js");
 
-  Number.prototype.toDeg = function () {
-    // convert radians to degrees (signed)
-    return (this * 180) / Math.PI;
-  };
+const handleError = (message) => {
+  throw { error: "Invalid Bearings", message };
+};
 
-  Number.prototype.toBrng = function () {
-    // convert radians to degrees (as bearing: 0...360)
-    return (this.toDeg() + 360) % 360;
-  };
-
-  Number.prototype.toDMS = function () {
-    // convert numeric degrees to deg/min/sec
-    let d = Math.abs(this);
-    d += 1 / 7200; // add to second for rounding
-    let deg = Math.floor(d);
-    let min = Math.floor((d - deg) * 60);
-    let sec = Math.floor((d - deg - min / 60) * 3600);
-
-    // add leading zeros if required
-    if (deg < 100) deg = "0" + deg;
-    if (deg < 10) deg = "0" + deg;
-    if (min < 10) min = "0" + min;
-    if (sec < 10) sec = "0" + sec;
-    return deg + "\u00B0" + min + "\u2032" + sec + "\u2033";
-  };
-
-  Number.prototype.toLat = function () {
-    // convert numeric degrees to deg/min/sec latitude
-    return this.toDMS().slice(1) + (this < 0 ? "S" : "N"); // knock off initial '0' for lat
-  };
-
-  Number.prototype.toLon = function () {
-    // convert numeric degrees to deg/min/sec longitude
-    return this.toDMS() + (this > 0 ? "E" : "W");
-  };
-
-  Number.prototype.toPrecision = function (fig) {
-    if (this == 0) return 0; // trailing zeros in place of exponential notation
-    let scale = Math.ceil(Math.log(this) * Math.LOG10E);
-    let mult = Math.pow(10, fig - scale);
-    return Math.round(this * mult) / mult;
-  };
-
-  /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  */
-
-  /**
-   * Adapted from Chris Veness
-   * http://www.movable-type.co.uk/scripts/latlong.htmlarses string representing degrees/minutes/seconds into numeric degrees.
-   *
-   * This is very flexible on formats, allowing signed decimal degrees, or deg-min-sec optionally
-   * suffixed by compass direction (NSEW); a variety of separators are accepted. Examples -3.62,
-   * '3 37 12W', '3°37′12″W'.
-   *
-   * Thousands/decimal separators must be comma/dot; use Dms.fromLocale to convert locale-specific
-   * thousands/decimal separators.
-   *
-   * @example
-   *   '53° 18′ 20.22″ N'.parseDeg() =
-   *
-   */
-
-  String.prototype.parseDMS = function () {
-    if (!isNaN(parseFloat(this)) && isFinite(this)) return Number(this);
-    let deg;
-    let degLL = this.replace(/^-/, "").replace(/[NSEW]/i, ""); // strip off any sign or compass dir'n
-    let dms = degLL.split(/[^0-9.,]+/); // split out separate d/m/s
-    for (let i in dms) if (dms[i] == "") dms.splice(i, 1); // remove empty elements (see note below)
-    switch (
-      dms.length // convert to decimal degrees...
-    ) {
-      case 3: // interpret 3-part result as d/m/s
-        deg = dms[0] / 1 + dms[1] / 60 + dms[2] / 3600;
-        break;
-      case 2: // interpret 2-part result as d/m
-        deg = dms[0] / 1 + dms[1] / 60;
-        break;
-      case 1: // decimal or non-separated dddmmss
-        if (/[NS]/i.test(this)) degLL = "0" + degLL; // - normalise N/S to 3-digit degrees
-        deg =
-          dms[0].slice(0, 3) / 1 +
-          dms[0].slice(3, 5) / 60 +
-          dms[0].slice(5) / 3600;
-        break;
-      default:
-        return NaN;
-    }
-    if (/^-/.test(this) || /[WS]/i.test(this)) deg = -deg; // take '-', west and south as -ve
-    return deg;
-  };
-
+module.exports = {
   /*------------------------------------------
 
         COMPASS HEADING AND ANGLE FUNCTIONS
 
     -------------------------------------------*/
-
   /**
    * getAvgOfBearings
    *
@@ -249,64 +164,77 @@ module.exports = (() => {
    *
    * Legitimate values are between 0 and 360 - not inclusive of 360, i.e. 359.99999
    */
-  const getAvgOfBearings = (bearings) => {
-    if (bearings.length < 2) return { error: "Less than two bearings" };
+  getAvgOfBearings: (bearings) => {
+    try {
+      if (bearings.length < 2) throw handleError("Less than two bearings");
 
-    let checkBearings = _checkBearings(bearings);
-    if (checkBearings.length > 0)
-      return { error: "Invalid Bearings", values: checkBearings };
+      //check for malformed data
+      let checkBearings = validateBearings(bearings);
+      if (checkBearings.length > 0) throw checkBearings;
 
-    let values = bearings.reduce(
-      function (a, c) {
-        return {
-          sinValue: (a.sinValue += Math.sin(c.toRad())),
-          cosValue: (a.cosValue += Math.cos(c.toRad())),
-        };
-      },
-      { sinValue: 0, cosValue: 0 }
-    );
+      let values = bearings.reduce(
+        function (a, c) {
+          return {
+            sinValue: (a.sinValue += Math.sin(c.toRad())),
+            cosValue: (a.cosValue += Math.cos(c.toRad())),
+          };
+        },
+        { sinValue: 0, cosValue: 0 }
+      );
 
-    let bearingInRad = Math.atan2(values.sinValue, values.cosValue);
-    let bearingInDeg = bearingInRad.toRad();
+      let bearingInRad = Math.atan2(values.sinValue, values.cosValue);
+      let bearingInDeg = bearingInRad.toDeg();
 
-    if (bearingInDeg <= -1) bearingInDeg += 359;
+      if (bearingInDeg <= -1) bearingInDeg += 359;
 
-    return {
-      degrees: Math.abs(Math.round(bearingInDeg * 100) / 100),
-      radians: bearingInRad,
-    };
-  };
+      return {
+        degrees: Math.abs(Math.round(bearingInDeg * 100) / 100),
+        radians: bearingInRad,
+      };
+    } catch (err) {
+      handleError(err);
+    }
+  },
 
   /**
     getBearingBetweenTwoPoints
 
     Calculate bearing between two positions
 
-    @param {object} position1 - GPS position
-      @param {number} position1.lat
-      @param {number} position1.lon
-    @param {object} position2 - GPS position
-      @param {number} position2.lat
-      @param {number} position2.lon
-    @return {Number}
+    @param {object} start - GPS position
+      @param {number} start.lat
+      @param {number} start.lon
+    @param {object} end - GPS position
+      @param {number} end.lat
+      @param {number} end.lon
+    @param {number} decimal - number decimal places, default 0
+    @return {Number | Error} 
 
   */
-  const getBearingBetweenTwoPoints = (position1, position2) => {
-    let pos1Lat = (position1.lat * Math.PI) / 180;
-    let pos2Lat = (position2.lat * Math.PI) / 180;
-    let dLon = ((position2.lon - position1.lon) * Math.PI) / 180;
+  getBearingBetweenTwoPoints: (start, end, decimal = 0) => {
+    try {
+      const [startClean, endClean] = processPointData([start, end]);
 
-    let y = Math.sin(dLon) * Math.cos(pos2Lat);
-    let x =
-      Math.cos(pos1Lat) * Math.sin(pos2Lat) -
-      Math.sin(pos1Lat) * Math.cos(pos2Lat) * Math.cos(dLon);
-    return ((Math.atan2(y, x) * 180) / Math.PI + 360) % 360;
-  };
+      let startLat = startClean.lat.toRad();
+      let endLat = endClean.lat.toRad();
+      let lonDiff = (endClean.lon - startClean.lon).toRad();
+
+      let y = Math.sin(lonDiff) * Math.cos(endLat);
+      let x =
+        Math.cos(startLat) * Math.sin(endLat) -
+        Math.sin(startLat) * Math.cos(endLat) * Math.cos(lonDiff);
+
+      return ((Math.atan2(y, x).toDeg() + 360) % 360).toFixedNumber(decimal);
+    } catch (err) {
+      throw err;
+    }
+  },
 
   /**
     getBearingDiff
 
-    Calculate normalized difference between two bearings
+    Calculate normalized difference between two bearings.  This return the smallest arc of
+    two possible as use case for this will always be the smaller of two arcs
 
     @param {number} bearing1
     @param {number} bearing2
@@ -314,12 +242,15 @@ module.exports = (() => {
     @return {number}
 
   */
-  const getBearingDiff = (bearing1, bearing2) => {
+  getBearingDiff: (bearing1, bearing2) => {
+    if (bearing1 >= 360 || bearing1 < 0 || bearing2 >= 360 || bearing2 < 0)
+      handleError("Out of bounds");
+
     return Math.min(
       bearing1 - bearing2 < 0 ? bearing1 - bearing2 + 360 : bearing1 - bearing2,
       bearing2 - bearing1 < 0 ? bearing2 - bearing1 + 360 : bearing2 - bearing1
     );
-  };
+  },
 
   /**
     addHeading
@@ -332,7 +263,7 @@ module.exports = (() => {
     @return {number} new bearing
 
   */
-  const addHeading = (baseHdg, addDegrees) => {
+  addHeading: (baseHdg, addDegrees) => {
     hdg = baseHdg + addDegrees;
     if (hdg < 0) {
       hdg += 360;
@@ -342,7 +273,7 @@ module.exports = (() => {
     }
 
     return hdg;
-  };
+  },
 
   /**
     invertHDG
@@ -353,7 +284,7 @@ module.exports = (() => {
     @return {number} new bearing
 
   */
-  const invertHDG = (hdg) => {
+  invertHDG: (hdg) => {
     hdg += 180; //quadrant orientaion
     if (hdg < 0) {
       hdg += 360;
@@ -363,7 +294,7 @@ module.exports = (() => {
     }
 
     return hdg;
-  };
+  },
 
   /**
     findMiddleAngle
@@ -377,7 +308,7 @@ module.exports = (() => {
     @return {number} median bearing
 
   */
-  function findMiddleAngle(startAngle, endAngle) {
+  findMiddleAngle: (startAngle, endAngle) => {
     startAngle = Math.round(startAngle);
     endAngle = Math.round(endAngle);
 
@@ -388,22 +319,50 @@ module.exports = (() => {
     } else {
       return this.addHeading(startAngle, (bearingdiff * -1) / 2);
     }
-  }
+  },
+};
 
-  /*------------------------------------------
 
-        GPS DATA 
+/***/ }),
 
-    -------------------------------------------*/
-  /**
-    Parse Human readable GPS
+/***/ "./src/const.js":
+/*!**********************!*\
+  !*** ./src/const.js ***!
+  \**********************/
+/*! no static exports found */
+/***/ (function(module, exports) {
 
-    Converts GPS
-  */
-  const parseDMS = (input) => {
-    return input.parseDMS();
-  };
+const geo_const = {
+  KM_TO_NM: 0.539957,
+  NM_TO_KM: 1.852,
+  HOUR: 3600,
+  KM_IN_DEG: 111.12,
+  NM_IN_DEG: 60,
+  NM_TO_FEET: 6076,
+  KM_TO_FEET: 3280.84,
+  RADIUS_IN_M: 6378137, //radius earth at equator
+  MEAN_RADIUS_IN_M: 6371000, //earth mean radius
+};
 
+module.exports = { geo_const };
+
+
+/***/ }),
+
+/***/ "./src/index.js":
+/*!**********************!*\
+  !*** ./src/index.js ***!
+  \**********************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+__webpack_require__(/*! ./prototypes */ "./src/prototypes.js");
+
+const { geo_const } = __webpack_require__(/*! ./const */ "./src/const.js");
+const { parseDMS } = __webpack_require__(/*! ./validateData/validation */ "./src/validateData/validation.js");
+const bearings = __webpack_require__(/*! ./bearings */ "./src/bearings.js");
+
+module.exports = (() => {
   /**
    * getBoundsOfData
    *
@@ -460,7 +419,7 @@ module.exports = (() => {
 
   */
   const getDistanceCos = (from, to, radius) => {
-    let R = radius || MEAN_RADIUS_IM_M / 1000; //default to earth radius in km
+    let R = radius || geo_const.MEAN_RADIUS_IN_M / 1000; //default to earth radius in km
 
     let d =
       Math.acos(
@@ -489,7 +448,7 @@ module.exports = (() => {
 
   */
   const getDistanceHaversine = (from, to) => {
-    let R = MEAN_RADIUS_IM_M / 1000; // earth's mean radius in km
+    let R = geo_const.MEAN_RADIUS_IN_M / 1000; // earth's mean radius in km
     let dLat = ((to.lat - from.lat) * Math.PI) / 180;
     let dLon = ((to.lon - from.lon) * Math.PI) / 180;
     from.lat = (from.lat * Math.PI) / 180;
@@ -522,10 +481,10 @@ module.exports = (() => {
 
   const getDistanceFromSpeedTime = (speed, time) => {
     return {
-      distInDegree: (speed * (time / HOUR)) / KM_IN_DEG,
-      distInFeet: speed * (time / HOUR) * KM_TO_FEET,
-      distInKilometers: speed * (time / HOUR),
-      distInNM: speed * (time / HOUR) * KM_TO_NM,
+      distInDegree: (speed * (time / geo_const.HOUR)) / geo_const.KM_IN_DEG,
+      distInFeet: speed * (time / geo_const.HOUR) * geo_const.KM_TO_FEET,
+      distInKilometers: speed * (time / geo_const.HOUR),
+      distInNM: speed * (time / geo_const.HOUR) * geo_const.KM_TO_NM,
     };
   };
 
@@ -551,7 +510,7 @@ module.exports = (() => {
       lng: waypoint.lng(),
     };
 
-    dist = distance / MEAN_RADIUS_IM_M / 1000;
+    dist = distance / geo_const.MEAN_RADIUS_IN_M / 1000;
 
     let brng = (Number(bearing) * Math.PI) / 180;
     let lat1 = position.lat;
@@ -639,10 +598,16 @@ module.exports = (() => {
     haversine = false,
   }) {
     let lineLength = haversine
-      ? this.getDistanceHaversine(lineStart, currentPoint, MEAN_RADIUS_IM_M) /
-        MEAN_RADIUS_IM_M
-      : this.getDistanceCos(lineStart, currentPoint, MEAN_RADIUS_IM_M) /
-        MEAN_RADIUS_IM_M;
+      ? this.getDistanceHaversine(
+          lineStart,
+          currentPoint,
+          geo_const.MEAN_RADIUS_IN_M
+        ) / geo_const.MEAN_RADIUS_IN_M
+      : this.getDistanceCos(
+          lineStart,
+          currentPoint,
+          geo_const.MEAN_RADIUS_IN_M
+        ) / geo_const.MEAN_RADIUS_IN_M;
 
     let startToCurrent =
       this.getBearingBetweenTwoPoints(lineStart, currentPoint) *
@@ -655,7 +620,7 @@ module.exports = (() => {
       Math.sin(lineLength) * Math.sin(startToCurrent - startLineBearing)
     );
 
-    return XTE * MEAN_RADIUS_IM_M;
+    return XTE * geo_const.MEAN_RADIUS_IN_M;
   }
 
   /*------------------------------------------
@@ -709,9 +674,10 @@ module.exports = (() => {
     const RADIANS = Math.PI / 180;
     let point = {};
 
-    point.lon = RADIUS_IN_M * longitude * RADIANS;
+    point.lon = geo_const.RADIUS_IN_M * longitude * RADIANS;
     point.lat = Math.max(Math.min(MAX, latitude), -MAX) * RADIANS;
-    point.lat = RADIUS_IN_M * Math.log(Math.tan(Math.PI / 4 + point.lat / 2));
+    point.lat =
+      geo_const.RADIUS_IN_M * Math.log(Math.tan(Math.PI / 4 + point.lat / 2));
 
     return point;
   };
@@ -868,13 +834,13 @@ module.exports = (() => {
   }
 
   return {
-    getAvgOfBearings,
-    getBearingBetweenTwoPoints,
-    getBearingDiff,
-    addHeading,
-    invertHDG,
-    findMiddleAngle,
-    parseDMS,
+    getAvgOfBearings: bearings.getAvgOfBearings,
+    getBearingBetweenTwoPoints: bearings.getBearingBetweenTwoPoints,
+    getBearingDiff: bearings.getBearingDiff,
+    addHeading: bearings.addHeading,
+    invertHDG: bearings.invertHDG,
+    findMiddleAngle: bearings.findMiddleAngle,
+    parseDMS: bearings.parseDMS,
     getBoundsOfData,
     getDistanceCos,
     getDistanceHaversine,
@@ -888,6 +854,273 @@ module.exports = (() => {
     GDP_smoother,
   };
 })();
+
+
+/***/ }),
+
+/***/ "./src/prototypes.js":
+/*!***************************!*\
+  !*** ./src/prototypes.js ***!
+  \***************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+const { parseDMS } = __webpack_require__(/*! ./validateData/validation */ "./src/validateData/validation.js");
+
+Number.prototype.toFixedNumber = function (digits, base) {
+  var pow = Math.pow(base || 10, digits);
+  return Math.round(this * pow) / pow;
+};
+
+// convert degrees to radians
+Number.prototype.toRad = function () {
+  return (this * Math.PI) / 180;
+};
+
+// convert radians to degrees (signed)
+Number.prototype.toDeg = function () {
+  return (this * 180) / Math.PI;
+};
+
+// convert radians to degrees (as bearing: 0...359)
+Number.prototype.toBNG = function () {
+  return (this.toDeg() + 360) % 360;
+};
+
+// convert numeric degrees to human readable deg/min/sec - i.e. 41.34445 = 041°20'40"
+Number.prototype.toDMS = function () {
+  let decimal = Math.abs(this);
+  decimal += 1 / 7200; // add to second for rounding
+  let deg = Math.floor(decimal);
+  let min = Math.floor((decimal - deg) * 60);
+  let sec = Number(((decimal - deg - min / 60) * 3600).toFixed(2));
+
+  // add leading zeros if required
+  if (deg < 100) deg = "0" + deg;
+  if (deg < 10) deg = "0" + deg;
+  if (min < 10) min = "0" + min;
+  if (sec < 10) sec = "0" + sec;
+  return `${deg}\u00B0${min}\u0027${sec}\u0022`;
+};
+
+Number.prototype.toLat = function () {
+  // convert numeric degrees to deg/min/sec latitude
+  return this.toDMS().slice(1) + (this < 0 ? "S" : "N"); // knock off initial '0' for lat
+};
+
+Number.prototype.toLon = function () {
+  // convert numeric degrees to deg/min/sec longitude
+  return this.toDMS() + (this > 0 ? "E" : "W");
+};
+
+/**
+ * Parses human readable DMS string into Decimal format
+ *
+ * See: /validation/parseDMS for attribution nad info *
+ */
+
+String.prototype.parseDMS = function () {
+  return parseDMS(this);
+};
+
+
+/***/ }),
+
+/***/ "./src/validateData/parseDMS.js":
+/*!**************************************!*\
+  !*** ./src/validateData/parseDMS.js ***!
+  \**************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/* WEBPACK VAR INJECTION */(function(module) {/**parseDMS
+ * Adapted from Chris Veness
+ * http://www.movable-type.co.uk/scripts/latlong.htmlarses
+ *
+ * Parses human readable DMS string into Decimal format
+ *
+ * Parses a wide range of styles
+ * ut since it is usd to process data is very strict on illegal characters
+ * to ensure a malformed piece of data is not parsed into an incorrect position
+ */
+
+const parseDMS = (position, options) => {
+  //Check for any illegal characters
+  if (/[^0-9.,NSEW\-\s\u00B0\'\"]/i.test(position))
+    throw "Malformed Position Data";
+
+  //Check position is already a decimal
+  if (!isNaN(parseFloat(position)) && isFinite(position))
+    return Number(position);
+
+  let deg;
+  let degLL = position.replace(/^-/, "").replace(/[NSEW]/i, ""); // strip off any sign or compass dir'n
+
+  console.log("degll", degLL);
+  let dms = degLL.split(/[^0-9.,]+/); // split out separate d/m/s
+
+  try {
+    //If find '' anywhere but at end of array then malformed data exists so throw error
+    dms.forEach((e, i) => {
+      if (e == "") {
+        if (i < dms.length - 1) {
+          throw "Malformed Position Data";
+        }
+        dms.splice(i, 1);
+      }
+    });
+
+    validateDMSstring(position, dms);
+
+    switch (
+      dms.length // convert to decimal degrees...
+    ) {
+      case 3: // interpret 3-part result as d/m/s
+        deg = dms[0] / 1 + dms[1] / 60 + dms[2] / 3600;
+        break;
+      case 2: // interpret 2-part result as d/m
+        deg = dms[0] / 1 + dms[1] / 60;
+        break;
+      case 1: // decimal or non-separated dddmmss
+        if (/[NS]/i.test(position)) degLL = "0" + degLL; // - normalise N/S to 3-digit degrees
+        deg =
+          dms[0].slice(0, 3) / 1 +
+          dms[0].slice(3, 5) / 60 +
+          dms[0].slice(5) / 3600;
+        break;
+      default:
+        throw "Malformed Position Data";
+    }
+  } catch (err) {
+    throw err;
+  }
+
+  if (/^-/.test(position) || /[WS]/i.test(position)) deg = -deg; // take '-', west and south as -ve
+  return deg.toFixedNumber(7);
+};
+
+module.export = {
+  parseDMS,
+};
+
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../../node_modules/webpack/buildin/module.js */ "./node_modules/webpack/buildin/module.js")(module)))
+
+/***/ }),
+
+/***/ "./src/validateData/validation.js":
+/*!****************************************!*\
+  !*** ./src/validateData/validation.js ***!
+  \****************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+__webpack_require__(/*! ../prototypes */ "./src/prototypes.js");
+const parseDMS = __webpack_require__(/*! ./parseDMS */ "./src/validateData/parseDMS.js");
+
+/**
+ * Inspects array of bearings and returns array of items that are not valid bearing values.
+ * If all values are valid then returns an array with length 0
+ * @param {array} bearings
+ * @param {bool} allowString - bool that determeins is a string that parses to a number is allowed.  Default - false
+ *
+ * @return {array} - If there are bad bearings then returns array of objects that containe the index and value
+ *  @param {number} index - Index of bad item
+ *  @param {!number} value - Any value that does not parse to a number
+ */
+validateBearings = (bearings, allowString) => {
+  let results = [];
+  bearings.forEach(function (bearing, i) {
+    if (isNaN(bearing) || bearing >= 360 || bearing < 0 || bearing === null)
+      return results.push({
+        index: i,
+        value: bearing,
+      });
+
+    if (!allowString && typeof bearing === "string")
+      results.push({
+        index: i,
+        value: bearing,
+      });
+  });
+
+  return results;
+};
+
+/**
+ * processPointData
+ *
+ * Checks all items in array for valid formated Position
+ * @param {Object[]} positions - array of POsition Objects
+ *  @param {Number} positions[].lat
+ * @param {Number} positions[].lon
+ * @return {Array} - Returns array of parsed data converted to DMS
+ *
+ */
+processPointData = (positions) => {
+  try {
+    //check if array
+    if (!Array.isArray(positions)) positions = new Array(positions);
+
+    let returnArray = [];
+
+    for (let i = 0; i < positions.length; i++) {
+      let point = positions[i];
+
+      //check if out of bounds
+      point.lat = parseDMS(point.lat);
+      if (Math.abs(point.lat) > 90) throw "Latitude out of bounds";
+
+      point.lon = parseDMS(point.lon);
+      if (Math.abs(point.lon) > 180) throw "Longitude out of bounds";
+
+      returnArray.push(point);
+    }
+
+    return returnArray;
+  } catch (err) {
+    throw { error: "GPS Position Error", message: err };
+  }
+};
+
+/**
+ * testPositionStringRanges
+ *
+ * Checks parsed DMS array for any element out of bounds.  Uses regex
+ * on original string to look for NS to see if item is Lat or Lon
+ *
+ * @param {string} dmsString - Original string position
+ * @param {array} dmsArray - Array of parsed string into elements [Degrees, Minutes, Seconds]
+ *  @return {null | Error } returns error if item out of bounds or malformed
+ */
+validateDMSstring = (dmsString, dmsArray) => {
+  //check deg boundaries
+  if (Math.abs(dmsArray[0]) > 180) throw "DMS degrees out of bounds";
+
+  if (/[NS]/i.test(dmsString) && Math.abs(dmsArray[0]) > 90)
+    throw "DMS degrees out of bounds";
+
+  switch (
+    dmsArray.length // convert to decimal degrees...
+  ) {
+    case 3: // interpret 3-part result as d/m/s
+      if (dmsArray[1] > 60) throw "DMS minutes out of bounds";
+
+      if (dmsArray[2] > 60) throw "DMS seconds out of bounds";
+
+    case 2: // interpret 2-part result as d/m
+      if (dmsArray[1] > 60) throw "DMS minutes out of bounds";
+
+    default:
+      return;
+  }
+};
+
+module.exports = {
+  validateBearings,
+  processPointData,
+  validateDMSstring,
+  parseDMS,
+};
 
 
 /***/ })
