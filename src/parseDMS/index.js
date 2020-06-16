@@ -18,7 +18,8 @@
  */
 
 const processPointObject = require("./components/processPointObject");
-const processDMS = require("../parseDMS/components/processDMS");
+const processDMS = require("./components/processDMS");
+require("../prototypes");
 
 /**
  *  parseDMS - main parsing function
@@ -59,6 +60,4 @@ const parseDMS = (data, options = {}) => {
   };
 };
 
-module.exports = {
-  parseDMS,
-};
+module.exports = parseDMS;

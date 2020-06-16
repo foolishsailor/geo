@@ -1,4 +1,4 @@
-const { parseDMS } = require("../src/validateData/validation");
+const parseDMS = require("../src/parseDMS");
 const {
   dmsParseErrorTest,
   dmsParseSuccessTest,
@@ -45,31 +45,31 @@ describe("parseDMS()", () => {
         expect.arrayContaining([
           expect.arrayContaining([
             123,
-            expect.objectContaining({ Error: "Position Out of Bounds" }),
-            expect.objectContaining({ Error: "Position Out of Bounds" }),
+            expect.objectContaining({ error: "Position Out of Bounds" }),
+            expect.objectContaining({ error: "Position Out of Bounds" }),
             23.223,
             -12.5423139,
             expect.objectContaining({
               lat: 23.5830556,
               lon: {
-                Error: "DMS seconds out of bounds",
+                error: "DMS seconds out of bounds",
               },
             }),
           ]),
           expect.objectContaining({
             lat: 83.6299722,
             lon: {
-              Error: "DMS minutes out of bounds",
+              error: "DMS minutes out of bounds",
             },
           }),
           -53.13275,
           expect.arrayContaining([
             123,
-            expect.objectContaining({ Error: "Position Out of Bounds" }),
+            expect.objectContaining({ error: "Position Out of Bounds" }),
             -12.5423139,
             expect.objectContaining({
               lat: {
-                Error: "Latitude out of bounds",
+                error: "Latitude out of bounds",
               },
               lon: 114.3261111,
             }),

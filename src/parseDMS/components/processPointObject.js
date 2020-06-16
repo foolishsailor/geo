@@ -9,16 +9,20 @@ const processPointObject = (data, options, func) => {
     const lat =
       Math.abs(parseFloat(data.lat)) > 90
         ? {
-            Error: "Latitude out of bounds",
+            error: "Latitude out of bounds",
           }
         : func(data.lat, options);
     const lon =
       Math.abs(parseFloat(data.lon)) > 180
         ? {
-            Error: "Longitude out of bounds",
+            error: "Longitude out of bounds",
           }
         : func(data.lon, options);
 
+    if (!options.continueOnError) {
+      if (lat.error) throw lat.error;
+      if (lon.error) throw lon.error;
+    }
     return options.flatten ? [lat, lon] : { lat, lon };
   } else {
     return options.flatten

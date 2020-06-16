@@ -40,7 +40,7 @@ const processDMS = (position, options) => {
     if (/^-/.test(position) || /[WS]/i.test(position)) deg = -deg; // take '-', west and south as -ve
     return deg.toFixedNumber(7);
   } catch (err) {
-    if (options.continueOnError) return { Error: err };
+    if (options.continueOnError) return { error: err };
     throw err;
   }
 };

@@ -1,7 +1,7 @@
 require("./prototypes");
 
 const { geo_const } = require("./const");
-const { parseDMS } = require("./validateData/validation");
+const parseDMS = require("./parseDMS");
 const bearings = require("./bearings");
 
 module.exports = (() => {

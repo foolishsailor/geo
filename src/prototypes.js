@@ -1,4 +1,4 @@
-const { parseDMS } = require("./validateData/validation");
+const parseDMS = require("./parseDMS");
 
 Number.prototype.toFixedNumber = function (digits, base) {
   var pow = Math.pow(base || 10, digits);

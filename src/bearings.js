@@ -1,10 +1,37 @@
-const {
-  validateBearings,
-  processPointData,
-} = require("./validateData/validation");
+const parseDMS = require("./parseDMS");
+require("./prototypes");
 
 const handleError = (message) => {
   throw { error: "Invalid Bearings", message };
+};
+
+/**
+ * Inspects array of bearings and returns array of items that are not valid bearing values.
+ * If all values are valid then returns an array with length 0
+ * @param {array} bearings
+ * @param {bool} allowString - bool that determeins is a string that parses to a number is allowed.  Default - false
+ *
+ * @return {array} - If there are bad bearings then returns array of objects that containe the index and value
+ *  @param {number} index - Index of bad item
+ *  @param {!number} value - Any value that does not parse to a number
+ */
+const validateBearings = (bearings, allowString) => {
+  let results = [];
+  bearings.forEach(function (bearing, i) {
+    if (isNaN(bearing) || bearing >= 360 || bearing < 0 || bearing === null)
+      return results.push({
+        index: i,
+        value: bearing,
+      });
+
+    if (!allowString && typeof bearing === "string")
+      results.push({
+        index: i,
+        value: bearing,
+      });
+  });
+
+  return results;
 };
 
 module.exports = {
@@ -13,6 +40,8 @@ module.exports = {
         COMPASS HEADING AND ANGLE FUNCTIONS
 
     -------------------------------------------*/
+
+  validateBearings,
   /**
    * getAvgOfBearings
    *
@@ -75,7 +104,7 @@ module.exports = {
   */
   getBearingBetweenTwoPoints: (start, end, decimal = 0) => {
     try {
-      const [startClean, endClean] = processPointData([start, end]);
+      const [startClean, endClean] = parseDMS([start, end]);
 
       let startLat = startClean.lat.toRad();
       let endLat = endClean.lat.toRad();

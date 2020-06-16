@@ -5,6 +5,7 @@
   "main": "dist/geo.js",
   "scripts": {
     "test": "jest",
+    "test:with-coverage": "jest --coverage && coveralls < coverage/lcov.info",
     "build:umd-dev": "webpack --output-filename geo.js --mode development",
     "build:umd-production": "webpack --output-filename geo.min.js --mode production"
   },
@@ -24,6 +25,7 @@
   },
   "dependencies": {},
   "devDependencies": {
+    "coveralls": "^3.1.0",
     "jest": "^26.0.1",
     "rewire": "^5.0.0",
     "webpack": "^4.43.0",
