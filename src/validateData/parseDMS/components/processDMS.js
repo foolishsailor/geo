@@ -17,11 +17,11 @@ const processDMS = (position, options) => {
       return Number(position);
     }
 
-    let deg;
-    let degLL = position.replace(/^-/, "").replace(/[NSEW]/i, ""); // strip off any sign or compass dir'n
-
-    //console.log("degll", degLL);
-    let dms = degLL.split(/[^0-9.,]+/); // split out separate d/m/s
+    let deg,
+      dms = position
+        .replace(/^-/, "")
+        .replace(/[NSEW]/i, "") // strip off any sign or compass dir'n
+        .split(/[^0-9.,]+/); // split out separate d/m/s
 
     //If find '' anywhere but at end of array then malformed data exists so throw error
     dms.forEach((e, i) => {
@@ -45,7 +45,6 @@ const processDMS = (position, options) => {
         deg = dms[0] / 1 + dms[1] / 60;
         break;
       case 1: // decimal or non-separated dddmmss
-        if (/[NS]/i.test(position)) degLL = "0" + degLL; // - normalise N/S to 3-digit degrees
         deg =
           dms[0].slice(0, 3) / 1 +
           dms[0].slice(3, 5) / 60 +
