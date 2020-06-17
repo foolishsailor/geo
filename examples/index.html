@@ -1,14 +1,77 @@
-<html>
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&amp;display=swap"
+      href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;800&display=swap"
       rel="stylesheet"
     />
     <link rel="stylesheet" href="./index.css" />
     <title>geo Examples</title>
   </head>
 
-  <body></body>
+  <body>
+    <div class="header"></div>
+    <div class="container">
+      <div class="content">
+        <div class="cards">
+          <div class="card">
+            <div class="card__header">
+              <h3 class="header__title">Parse Geo String</h3>
+              <p class="header__description">
+                Parse a human readable or error prone GPS like string into
+                Decimal format.
+              </p>
+
+              <p class="header__description">
+                ex: '93 07 57.9 W', 'W053 07', '53°07'57.9\"W'
+              </p>
+            </div>
+            <div class="card__body">
+              <div class="input_group">
+                <label for="dms_string">DMS String</label>
+                <input
+                  class="input---block"
+                  type="text"
+                  name="dms_string"
+                  placeholder="Enter string here"
+                />
+              </div>
+              <div class="input_group">
+                <label for="d_output">Output</label>
+                <input class="input---block" type="text" name="d_output" />
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="input_group">
+              <div>
+                <label for="dms_string">DMS String</label>
+                <input type="text" name="dms_string" />
+              </div>
+
+              <div>
+                <label for="dms_string">Output</label>
+                <input type="text" name="dms_string" />
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="input_group">
+              <div>
+                <label for="dms_string">DMS String</label>
+                <input type="text" name="dms_string" />
+              </div>
+
+              <div>
+                <label for="dms_string">Output</label>
+                <input type="text" name="dms_string" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
 </html>

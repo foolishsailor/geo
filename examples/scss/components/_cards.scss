@@ -1,4 +1,4 @@
-.social_cards {
+.cards {
   position: relative;
   display: flex;
   flex-direction: row;
@@ -7,12 +7,10 @@
   margin-right: -15px;
 }
 
-.social_card {
-  $border: 4px;
-
+.card {
+  $border: 10px;
   position: relative;
-  flex: 0 0 calc(25% - 30px);
-  overflow: hidden;
+  flex: 1 1 calc(50% - 30px);
   box-sizing: border-box;
   margin: 15px;
   padding: 30px 25px;
@@ -24,85 +22,18 @@
   &:hover {
     background-color: $background-card___hover;
   }
-
-  &:before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: $border;
-  }
-
-  @media (max-width: $mobile_breakpoint) {
-    flex: 0 0 calc(100% - 30px);
-  }
 }
 
-.social_card__social_detail {
-  margin-bottom: 20px;
-  line-height: 1.4rem;
-  font-size: 0.9rem;
-  font-weight: 700;
-  img {
-    margin-right: 8px;
-  }
+.card__header {
+  text-align: left;
+  padding-bottom: 2em;
 }
 
-.social_card__social_count {
-  font-size: 4rem;
-  font-weight: 700;
-  color: $text-dark;
-}
-
-.social_card__social_count_suffix {
-  margin-bottom: 30px;
-  text-transform: uppercase;
-  letter-spacing: 0.3rem;
-}
-
-.social_card__social_count_change {
-  display: inline-flex;
-  font-weight: 700;
-  background-repeat: no-repeat;
-  background-position: center left;
-  padding-left: 10px;
-}
-
-.social_card__social_count_change___up {
-  color: $text-up;
-  background-image: url(../../images/icon-up.svg);
-}
-
-.social_card__social_count_change___down {
-  color: $text-down;
-  background-image: url(../../images/icon-down.svg);
-}
-
-.social_card___facebook::before {
-  background-color: $facebook;
-}
-.social_card___twitter::before {
-  background-color: $twitter;
-}
-.social_card___instagram::before {
-  background: $instagram;
-}
-.social_card___youTube::before {
-  background: $youTube;
-}
-
-.social_card__header {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 30px;
-  align-items: center;
-  font-size: 1rem;
+.header__title {
+  font-size: 2em;
   font-weight: 700;
 }
 
-.social_card__footer {
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
+.header__description {
+  padding-bottom: 10px;
 }
