@@ -1,8 +1,12 @@
 # geo
 
 <div text-align: center;">
-<a href='https://coveralls.io/github/foolishsailor/geo?branch=master'><img src='https://coveralls.io/repos/github/foolishsailor/geo/badge.svg?branch=master' alt='Coverage Status' /></a> <a href="https://codeclimate.com/github/foolishsailor/geo/maintainability"><img src="https://api.codeclimate.com/v1/badges/43f78828fd45baebd63f/maintainability" /></a>
+<a href='https://coveralls.io/github/foolishsailor/geo?branch=master'><img src='https://coveralls.io/repos/github/foolishsailor/geo/badge.svg?branch=master' alt='Coverage Status' /></a> <a href="https://codeclimate.com/github/foolishsailor/geo/maintainability"><img src="https://api.codeclimate.com/v1/badges/43f78828fd45baebd63f/maintainability" /></a> <a href='https://opensource.org/licenses/MIT'><img src='https://img.shields.io/badge/License-MIT-yellow.svg' alt='MIT License' /></a>
+ 
  </div>
+ 
+ 
+ 
  
 *** in development ***
 
