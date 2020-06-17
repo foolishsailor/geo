@@ -1,7 +1,7 @@
 {
   "name": "geo",
   "description": "Collection of useful functions when dealing with Navigation and Position data",
-  "version": "0.0.1",
+  "version": "0.0.7",
   "main": "dist/geo.js",
   "scripts": {
     "test": "jest",

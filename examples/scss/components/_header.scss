@@ -1,0 +1,37 @@
+.header {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 100%;
+  margin: 40px 0;
+  font-weight: 700;
+
+  @media (max-width: $mobile_breakpoint) {
+    flex-direction: column;
+  }
+
+  h1 {
+    @media (max-width: $mobile_breakpoint) {
+      font-size: 1.8rem;
+    }
+  }
+}
+
+.header__social_container {
+  @media (max-width: $mobile_breakpoint) {
+    padding-bottom: 25px;
+    border-bottom: solid 1px $text-light;
+  }
+}
+
+.header__toggle {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  @media (max-width: $mobile_breakpoint) {
+    margin-top: 20px;
+    justify-content: space-between;
+  }
+}

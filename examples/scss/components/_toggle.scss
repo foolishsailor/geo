@@ -1,0 +1,58 @@
+.toggle_switch {
+  $radius_outer: 24px;
+  $radius_inner: 18px;
+
+  margin-left: 10px;
+
+  .toggle_switch__switch {
+    position: relative;
+    display: inline-block;
+    height: $radius_outer;
+    width: 48px;
+
+    input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+
+      &:checked + .toggle_switch__toggle {
+        background: $toggle-background-checked;
+      }
+
+      &:checked + .toggle_switch__toggle:before {
+        transform: translateX(-24px);
+      }
+    }
+  }
+
+  .toggle_switch__toggle {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: $radius_outer;
+    background: $toggle-background;
+
+    &:hover {
+      background: $toggle-background-checked;
+    }
+
+    &:before {
+      position: absolute;
+      content: "";
+      width: $radius_inner;
+      height: $radius_inner;
+      right: 3px;
+      top: 3px;
+      border-radius: $radius_inner;
+      background-color: $background;
+      transition: 0.2s;
+    }
+  }
+}
+
+[data-theme="dark"] .toggle_switch__toggle::before {
+  transform: translateX(calc(100% + 6px));
+}
