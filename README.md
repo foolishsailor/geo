@@ -1,4 +1,11 @@
 # geo
+
+
+<div style="text-align: center;">
+<a href='https://coveralls.io/github/foolishsailor/geo?branch=master'><img src='https://coveralls.io/repos/github/foolishsailor/geo/badge.svg?branch=master' alt='Coverage Status' /></a>
+
+<a href="https://codeclimate.com/github/foolishsailor/geo/maintainability"><img src="https://api.codeclimate.com/v1/badges/43f78828fd45baebd63f/maintainability" /></a>
+
 Collection of geographical and navigation related helper functions.  
 Functions include:
 * Various distance calculations: Between 2 points, Time and Heading...
