@@ -1,5 +1,5 @@
-# geo
-<img src="https://github.com/foolishsailor/geo/geo_icon.png" alt="geo"/>
+
+<div style="display:flex; align-items:center; justify-content:center;"><img src="https://github.com/foolishsailor/geo/blob/master/geo_icon.png" width="100px" height="100px" alt="geo"/><h1>geo</h1></div>
 <div text-align: center;">
 <a href='https://coveralls.io/github/foolishsailor/geo?branch=master'><img src='https://coveralls.io/repos/github/foolishsailor/geo/badge.svg?branch=master' alt='Coverage Status' /></a> <a href="https://codeclimate.com/github/foolishsailor/geo/maintainability"><img src="https://api.codeclimate.com/v1/badges/43f78828fd45baebd63f/maintainability" /></a> <a href='https://opensource.org/licenses/MIT'><img src='https://img.shields.io/badge/License-MIT-yellow.svg' alt='MIT License' /></a>
  
