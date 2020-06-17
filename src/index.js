@@ -1,4 +1,4 @@
-const parseDMS = require("./parseDMS");
+const parseDMS = require("./parseDMS/index");
 const {
   getAvgOfBearings,
   getBearingBetweenTwoPoints,
@@ -40,7 +40,6 @@ module.exports = (() => {
     getIntersectionPoint,
     getPostionFromBearingAndDistance,
     mercator,
-
     humanTime,
     GDP_smoother,
   };

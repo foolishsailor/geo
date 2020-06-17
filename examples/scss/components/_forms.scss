@@ -1,5 +1,4 @@
 .input_group {
-  display: flex;
   position: relative;
 
   input {
@@ -23,8 +22,22 @@
     color: $text-dark;
     font-size: 0.7rem;
   }
+
+  .input__error_msg {
+    display: none;
+    padding: 10px;
+  }
+
+  .input---error {
+    display: block;
+    color: red;
+  }
 }
 
 .input---block {
   width: 100%;
+}
+
+.input---notInteractive {
+  pointer-events: none;
 }

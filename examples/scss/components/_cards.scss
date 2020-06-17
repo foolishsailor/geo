@@ -11,6 +11,7 @@
   $border: 10px;
   position: relative;
   flex: 1 1 calc(50% - 30px);
+
   box-sizing: border-box;
   margin: 15px;
   padding: 30px 25px;
@@ -29,6 +30,15 @@
   padding-bottom: 2em;
 }
 
+.card__body {
+  display: flex;
+  flex-direction: column;
+}
+
+.card__footer {
+  text-align: right;
+}
+
 .header__title {
   font-size: 2em;
   font-weight: 700;
@@ -36,4 +46,8 @@
 
 .header__description {
   padding-bottom: 10px;
+}
+
+.card__body___horizontal {
+  flex-direction: row;
 }

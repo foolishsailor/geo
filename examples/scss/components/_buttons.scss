@@ -1,0 +1,19 @@
+button {
+  min-width: 100px;
+  margin: 10px auto;
+  padding: 10px;
+  border: none;
+  border-radius: 100px;
+  font-size: 1.6rem;
+  color: $text-light;
+  outline: none;
+  font-weight: 700;
+  background-color: $text-dark;
+  box-shadow: $box-shadow-4dp;
+  transition: 100ms ease-in-out;
+
+  &:active {
+    transform: scale(0.98, 0.98);
+    box-shadow: $box-shadow-1dp;
+  }
+}
