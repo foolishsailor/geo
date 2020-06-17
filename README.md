@@ -1,21 +1,23 @@
 # geo
 
-
-<div style="text-align: center;">
-<a href='https://coveralls.io/github/foolishsailor/geo?branch=master'><img src='https://coveralls.io/repos/github/foolishsailor/geo/badge.svg?branch=master' alt='Coverage Status' /></a>
-
-<a href="https://codeclimate.com/github/foolishsailor/geo/maintainability"><img src="https://api.codeclimate.com/v1/badges/43f78828fd45baebd63f/maintainability" /></a>
+<div text-align: center;">
+<a href='https://coveralls.io/github/foolishsailor/geo?branch=master'><img src='https://coveralls.io/repos/github/foolishsailor/geo/badge.svg?branch=master' alt='Coverage Status' /></a><a href="https://codeclimate.com/github/foolishsailor/geo/maintainability"><img src="https://api.codeclimate.com/v1/badges/43f78828fd45baebd63f/maintainability" /></a>
+ </div>
+ 
+*** in development ***
 
 Collection of geographical and navigation related helper functions.  
 Functions include:
+* GPS conversion utilities
+* Robust parsing tool to convert human readable GPS data and deeply nested or XML GPX data to decimal format
 * Various distance calculations: Between 2 points, Time and Heading...
 * Various position calculations: Intersection from two routes, Bearing and Distance...
 * Handles normalizing bearings: Avg of bearings, Median Bearing, Bearing Difference...
 * Number utility helpers: toRad, toDeg, toBrng...
-* GPS conversion utilities
+
 ...more
 
-*** in development ***
+
 
 ## Installation
 
