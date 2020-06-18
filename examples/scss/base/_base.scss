@@ -47,6 +47,13 @@ h2 {
   margin-top: 2rem;
   margin-bottom: 0.6rem;
   font-size: 1.8rem;
+
+  &.large {
+    font-size: 2.2rem;
+    color: $text-light;
+    margin-top: 3rem;
+    margin-bottom: 3rem;
+  }
 }
 
 h3 {

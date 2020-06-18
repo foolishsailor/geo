@@ -102,7 +102,7 @@ module.exports = {
     @return {Number | Error} 
 
   */
-  getBearingBetweenTwoPoints: (start, end, decimal = 0) => {
+  getBngTwoPoints: (start, end, decimal = 0) => {
     try {
       const [startClean, endClean] = parseDMS([start, end]);
 
@@ -133,7 +133,7 @@ module.exports = {
     @return {number}
 
   */
-  getBearingDiff: (bearing1, bearing2) => {
+  getBngDiff: (bearing1, bearing2) => {
     if (bearing1 >= 360 || bearing1 < 0 || bearing2 >= 360 || bearing2 < 0)
       handleError("Out of bounds");
 
@@ -154,7 +154,7 @@ module.exports = {
     @return {number} new bearing
 
   */
-  addHeading: (baseHdg, addDegrees) => {
+  addHDG: (baseHdg, addDegrees) => {
     hdg = baseHdg + addDegrees;
     if (hdg < 0) {
       hdg += 360;
@@ -190,8 +190,8 @@ module.exports = {
   /**
     findMiddleAngle
 
-    Calculates difference in two bearings and returns median bearing between those two bearings
-    Effectively finds the smaller of the two angles of a cricle and returns the median angle
+    Calculates difference in two bearings and returns middle bearing between those two bearings
+    Effectively finds the smaller of the two angles of a cricle and returns the middle angle
 
     @param {number} startAngle
     @param {number} endAngle
@@ -199,7 +199,7 @@ module.exports = {
     @return {number} median bearing
 
   */
-  findMiddleAngle: (startAngle, endAngle) => {
+  getMiddleAngle: (startAngle, endAngle) => {
     startAngle = Math.round(startAngle);
     endAngle = Math.round(endAngle);
 

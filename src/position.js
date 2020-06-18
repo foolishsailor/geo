@@ -3,7 +3,7 @@ require("./prototypes");
 /**
  * getPositionFromBearingAndDistance
  *
- * Use origin point, bearing and distance moved to calculate new position in km
+ * Use origin point, bearing and distance moved to calculate new position
  * @param {object} point - origin point
  *  @param {number} point.lat
  *  @param {number} point.lon
@@ -14,7 +14,7 @@ require("./prototypes");
  *  @param {number} lat
  *  @param {number} lon
  */
-const getPostionFromBearingAndDistance = (point, distance, bearing) => {
+const getPosFromBngAndDist = (point, distance, bearing) => {
   dist = distance / geo_const.MEAN_RADIUS_IN_M / 1000;
 
   let brng = Number(bearing).toRad(),
@@ -38,10 +38,9 @@ const getPostionFromBearingAndDistance = (point, distance, bearing) => {
 };
 
 /**
-    getIntersection
+    getIntersectionPoint
 
-    Calculate intersection point between two lines/routes in lat and lon.  They are not required to overlap to calulate
-
+    Calculate intersection point between two lines/routes in lat and lon.  They are not required to overlap to calculate
    
       @property {object} lineA
         @property {number} lat
@@ -94,6 +93,6 @@ const mercator = ({ latitude, longitude }) => {
 
 module.exports = {
   getIntersectionPoint,
-  getPostionFromBearingAndDistance,
+  getPosFromBngAndDist,
   mercator,
 };

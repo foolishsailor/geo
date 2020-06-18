@@ -1,7 +1,7 @@
 /**
  * parseDMS
  *
- * Versitle parsing of human readbale GPS data into decimal format format.  Handles awide
+ * Versitle parsing of human readable GPS data into decimal format.  Handles a wide
  * variety of data entry to allow users flexibility in doing data entry.
  *
  * It can also handle deeply nested diverse data formats and return the information formated
@@ -13,7 +13,6 @@
  * Adapted and built from Chris Veness original script
  *  * http://www.movable-type.co.uk/scripts/latlong.htmlarses
  *
- * FOr more detail see:  https://github.com/foolishsailor/geo
  *
  */
 
@@ -47,7 +46,6 @@ const parseDMS = (data, options = {}) => {
     return options.flatten
       ? data.reduce((a, c) => a.concat(parseDMS(c, options)), [])
       : data.map((item) => parseDMS(item, options));
-  //
 
   //Check if object with lat lon
   if (typeof data === "object") {

@@ -14,7 +14,6 @@ const processDMS = (position, options) => {
       Math.abs(position)
     ) {
       if (Math.abs(position) > 180) throw "Position Out of Bounds";
-
       return Number(position);
     }
 
