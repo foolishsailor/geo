@@ -15,104 +15,13 @@
     <div class="container">
       <div class="content">
         <div class="cards">
-          <div class="card">
-            <div class="card__header">
-              <h3 class="header__title">Parse and Validate Geo String</h3>
-              <p class="header__description">
-                Parse a human readable or error prone GPS position like string
-                into Decimal format and validates it is a valid value. Returns
-                error describing where the value is incorrect
-              </p>
-
-              <p class="header__description">
-                Will successfully parse:&nbsp&nbsp 93 07 57.9 W,&nbsp&nbsp W053
-                07,&nbsp&nbsp 53°07'57.9W
-              </p>
-              <p class="header__description">
-                Will trap errors:&nbsp&nbsp 193 07 57.9 W,&nbsp&nbsp W053
-                po07,&nbsp&nbsp 93°07'57.9S
-              </p>
-            </div>
-            <div class="card__body">
-              <form>
-                <div class="input_group">
-                  <label for="dms_string">DMS String</label>
-                  <input
-                    onfocus="parseGeoScript.clearInputError(event)"
-                    class="input---block"
-                    type="text"
-                    name="dms_string"
-                    placeholder="Enter string here"
-                  />
-                </div>
-                <button onclick="parseGeoScript.parseDMS(event)">Go!</button>
-                <div class="input_group">
-                  <label for="d_output">Output</label>
-                  <input
-                    class="input---block input---notInteractive"
-                    type="text"
-                    name="d_output"
-                    placeholder="Decimal format will appear here"
-                  />
-                </div>
-              </form>
-              <div class="card__footer">More Info</div>
-            </div>
-          </div>
-          <div class="card">
-            <div class="card__header">
-              <h3 class="header__title">Parse and Validate Geo Array</h3>
-              <p class="header__description">
-                Recursively parse and array of GPS position like items. Can
-                handle mixed and nested arrays. Options such as flatten, stop on
-                error etc.
-              </p>
-            </div>
-            <div class="card__body card__body___horizontal">
-              <form>
-                <div class="input_group">
-                  <label for="dms_object">DMS String</label>
-                  <textarea
-                    rows-5
-                    onfocus="parseGeoScript.clearInputError(event)"
-                    class="input---block"
-                    type="text"
-                    name="dms_object"
-                    placeholder="Enter object/array here"
-                  />
-                </div>
-                <button onclick="parseGeoScript.parseDMS(event)">Go!</button>
-                <div class="input_group">
-                  <label for="d_output">Output</label>
-                  <textarea
-                    class="input---block input---notInteractive"
-                    type="text"
-                    name="d_output"
-                    placeholder="Decimal format will appear here"
-                  />
-                </div>
-              </form>
-              <div class="card__footer">More Info</div>
-            </div>
-          </div>
-          <div class="card">
-            <div class="input_group">
-              <div>
-                <label for="dms_string">DMS String</label>
-                <input type="text" name="dms_string" />
-              </div>
-
-              <div>
-                <label for="dms_string">Output</label>
-                <input type="text" name="dms_string" />
-              </div>
-            </div>
-          </div>
+          <div id="parseAndValidateString" class="card"></div>
+          <div id="parseAndValidateArray" class="card"></div>
         </div>
       </div>
     </div>
 
     <script src="./scripts/geo.js"></script>
-    <script src="./scripts/parseGeoScript.js"></script>
+    <script type="module" src="index.js"></script>
   </body>
 </html>

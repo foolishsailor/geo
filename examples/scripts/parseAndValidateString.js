@@ -1,13 +1,13 @@
-const parseGeoScript = (() => {
+const parseAndValidateString = (() => {
   const clearInputError = (e) => {
     e.target.classList.remove("input---error");
   };
 
   const parseDMS = (e) => {
-    e.preventDefault();
-
     const stringInput = document.querySelector("input[name=dms_string]");
     const decimalOutput = document.querySelector("input[name=d_output]");
+
+    e.preventDefault();
 
     stringInput.classList.remove("input---error");
     decimalOutput.classList.remove("input---error");

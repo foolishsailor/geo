@@ -10,6 +10,8 @@
 .card {
   $border: 10px;
   position: relative;
+  display: flex;
+  flex-direction: column;
   flex: 1 1 calc(50% - 30px);
   box-sizing: border-box;
   margin: 15px;
@@ -32,9 +34,11 @@
 .card__body {
   display: flex;
   flex-direction: column;
+  flex: 1;
 }
 
 .card__footer {
+  margin-top: 20px;
   text-align: right;
 }
 

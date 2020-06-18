@@ -1,32 +1,39 @@
-const getPostionFromBearingAndDistance = (waypoint, distance, bearing) => {
-  let position = {
-    lat: waypoint.lat(),
-    lng: waypoint.lng(),
-  };
+require("./prototypes");
 
+/**
+ * getPositionFromBearingAndDistance
+ *
+ * Use origin point, bearing and distance moved to calculate new position in km
+ * @param {object} point - origin point
+ *  @param {number} point.lat
+ *  @param {number} point.lon
+ * @param {number} distance - distance travelled
+ * @param {number} bearing - direction travelled
+ *
+ * @return {object}
+ *  @param {number} lat
+ *  @param {number} lon
+ */
+const getPostionFromBearingAndDistance = (point, distance, bearing) => {
   dist = distance / geo_const.MEAN_RADIUS_IN_M / 1000;
 
-  let brng = (Number(bearing) * Math.PI) / 180;
-  let lat1 = position.lat;
-  lat1 = (lat1 * Math.PI) / 180;
-  let lon1 = position.lng;
-  lon1 = (lon1 * Math.PI) / 180;
-
-  let lat2 = Math.asin(
-    Math.sin(lat1) * Math.cos(dist) +
-      Math.cos(lat1) * Math.sin(dist) * Math.cos(brng)
-  );
-
-  let lon2 =
-    lon1 +
-    Math.atan2(
-      Math.sin(brng) * Math.sin(dist) * Math.cos(lat1),
-      Math.cos(dist) - Math.sin(lat1) * Math.sin(lat2)
-    );
+  let brng = Number(bearing).toRad(),
+    lat1 = point.lat.toRad(),
+    lon1 = position.lng.toRad(),
+    lat2 = Math.asin(
+      Math.sin(lat1) * Math.cos(dist) +
+        Math.cos(lat1) * Math.sin(dist) * Math.cos(brng)
+    ),
+    lon2 =
+      lon1 +
+      Math.atan2(
+        Math.sin(brng) * Math.sin(dist) * Math.cos(lat1),
+        Math.cos(dist) - Math.sin(lat1) * Math.sin(lat2)
+      );
 
   return {
-    lat: (lat2 * 180) / Math.PI,
-    lng: (lon2 * 180) / Math.PI,
+    lat: lat2.toDeg(),
+    lon: lon2.toDeg(),
   };
 };
 

@@ -1,0 +1,32 @@
+<div class="card__header">
+  <h3 class="header__title">Parse and Validate Geo Array</h3>
+  <p class="header__description">
+    Recursively parse and array of GPS position like items. Can handle mixed and
+    nested arrays. Options such as flatten, stop on error etc.
+  </p>
+</div>
+<div class="card__body card__body___horizontal">
+  <div class="input_group">
+    <label for="dms_object">DMS String</label>
+    <textarea
+      rows="5"
+      onfocus="parseGeoScript.clearInputError(event)"
+      class="input---block"
+      type="text"
+      name="dms_object"
+      placeholder="Enter object/array here"
+    ></textarea>
+  </div>
+  <button onclick="parseGeoScript.parseDMS(event)">Go!</button>
+  <div class="input_group">
+    <label for="d_output">Output</label>
+    <textarea
+      rows="5"
+      class="input---block input---notInteractive"
+      type="text"
+      name="d_output"
+      placeholder="Decimal format will appear here"
+    ></textarea>
+  </div>
+</div>
+<div class="card__footer">More Info</div>
