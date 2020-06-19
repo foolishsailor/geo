@@ -1,4 +1,5 @@
 require("./prototypes");
+const geo_const = require("./const");
 
 /**
  * getPositionFromBearingAndDistance
@@ -14,21 +15,21 @@ require("./prototypes");
  *  @param {number} lat
  *  @param {number} lon
  */
-const getPosFromBngAndDist = (point, distance, bearing) => {
+const getPosBngDist = (point, distance, bearing) => {
   dist = distance / geo_const.MEAN_RADIUS_IN_M / 1000;
 
   let brng = Number(bearing).toRad(),
     lat1 = point.lat.toRad(),
-    lon1 = position.lng.toRad(),
+    lon1 = point.lon.toRad(),
     lat2 = Math.asin(
-      Math.sin(lat1) * Math.cos(dist) +
-        Math.cos(lat1) * Math.sin(dist) * Math.cos(brng)
+      Math.sin(lat1) * Math.cos(distance) +
+        Math.cos(lat1) * Math.sin(distance) * Math.cos(brng)
     ),
     lon2 =
       lon1 +
       Math.atan2(
-        Math.sin(brng) * Math.sin(dist) * Math.cos(lat1),
-        Math.cos(dist) - Math.sin(lat1) * Math.sin(lat2)
+        Math.sin(brng) * Math.sin(distance) * Math.cos(lat1),
+        Math.cos(distance) - Math.sin(lat1) * Math.sin(lat2)
       );
 
   return {
@@ -93,6 +94,6 @@ const mercator = ({ latitude, longitude }) => {
 
 module.exports = {
   getIntersectionPoint,
-  getPosFromBngAndDist,
+  getPosBngDist,
   mercator,
 };

@@ -3,7 +3,7 @@ import loader from "./loader.js";
 export default (() => {
   loader("parseAndValidateString", "parseAndValidateString");
   loader("parseAndValidateArray");
-  loader("getPostionFromBearingAndDistance");
+  loader("getPosBngDist", "getPosBngDist");
   loader("getIntersectionPoint");
 
   loader("validateBearings");

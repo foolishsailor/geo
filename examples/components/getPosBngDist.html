@@ -1,0 +1,74 @@
+<div class="card__header">
+  <h3 class="header__title">getPosFromBngAndDist()</h3>
+  <h4 class="header__sub-title">Get position from bearing and distance</h4>
+  <p class="header__description">
+    Use origin point, bearing and distance to calculate new position
+  </p>
+</div>
+<div class="card__body card__body___horizontal">
+  <div>
+    <p class="card__body-text">
+      Origin
+    </p>
+    <div class="input_group">
+      <label for="gpbd_origin_lat">Lat</label>
+      <input
+        type="text"
+        class="input---block"
+        name="gpbd_origin_lat"
+        value="23 34' 59"
+      />
+    </div>
+    <div class="input_group">
+      <label for="gpbd_origin_lon">Lon</label>
+      <input
+        type="text"
+        class="input---block"
+        name="gpbd_origin_lon"
+        value="114 19'44"
+      />
+    </div>
+    <p class="card__body-text">&nbsp</p>
+    <div class="input_group">
+      <label for="gpbd_bearing">Bearing</label>
+      <input
+        type="text"
+        class="input---block"
+        name="gpbd_bearing"
+        placeholder="Direction travelled"
+      />
+    </div>
+    <div class="input_group">
+      <label for="gpbd_distance">Distance</label>
+      <input
+        type="text"
+        class="input---block"
+        name="gpbd_distance"
+        placeholder="Distance traveled"
+      />
+    </div>
+  </div>
+  <button onclick="getPosBngDist.getDestinationPoint(event)">Go!</button>
+  <div>
+    <p class="card__body-text">
+      Destination
+    </p>
+    <div class="input_group">
+      <label for="gpbd_destination_lat ">Latitude</label>
+      <input
+        type="text"
+        class="input---block input---notInteractive"
+        name="gpbd_destination_lat"
+      />
+    </div>
+    <div class="input_group">
+      <label for="gpbd_destination_lon">Longitude</label>
+      <input
+        type="text"
+        class="input---block input---notInteractive"
+        name="gpbd_destination_lon"
+      />
+    </div>
+  </div>
+</div>
+<div class="card__footer">More Info</div>

@@ -14,11 +14,7 @@ const {
   getDistanceFromSpeedTime,
   crossTrackDistanceTo,
 } = require("./distance");
-const {
-  getIntersectionPoint,
-  getPostionFromBearingAndDistance,
-  mercator,
-} = require("./position");
+const { getIntersectionPoint, getPosBngDist, mercator } = require("./position");
 const { humanTime } = require("./time");
 const { GDP_smoother } = require("./smoothing");
 
@@ -38,7 +34,7 @@ module.exports = (() => {
     getDistanceFromSpeedTime,
     crossTrackDistanceTo,
     getIntersectionPoint,
-    getPostionFromBearingAndDistance,
+    getPosBngDist,
     mercator,
     humanTime,
     GDP_smoother,

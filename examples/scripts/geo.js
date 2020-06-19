@@ -289,7 +289,7 @@ module.exports = {
     @return {Number | Error} 
 
   */
-  getBearingBetweenTwoPoints: (start, end, decimal = 0) => {
+  getBngTwoPoints: (start, end, decimal = 0) => {
     try {
       const [startClean, endClean] = parseDMS([start, end]);
 
@@ -320,7 +320,7 @@ module.exports = {
     @return {number}
 
   */
-  getBearingDiff: (bearing1, bearing2) => {
+  getBngDiff: (bearing1, bearing2) => {
     if (bearing1 >= 360 || bearing1 < 0 || bearing2 >= 360 || bearing2 < 0)
       handleError("Out of bounds");
 
@@ -341,7 +341,7 @@ module.exports = {
     @return {number} new bearing
 
   */
-  addHeading: (baseHdg, addDegrees) => {
+  addHDG: (baseHdg, addDegrees) => {
     hdg = baseHdg + addDegrees;
     if (hdg < 0) {
       hdg += 360;
@@ -377,8 +377,8 @@ module.exports = {
   /**
     findMiddleAngle
 
-    Calculates difference in two bearings and returns median bearing between those two bearings
-    Effectively finds the smaller of the two angles of a cricle and returns the median angle
+    Calculates difference in two bearings and returns middle bearing between those two bearings
+    Effectively finds the smaller of the two angles of a cricle and returns the middle angle
 
     @param {number} startAngle
     @param {number} endAngle
@@ -386,7 +386,7 @@ module.exports = {
     @return {number} median bearing
 
   */
-  findMiddleAngle: (startAngle, endAngle) => {
+  getMiddleAngle: (startAngle, endAngle) => {
     startAngle = Math.round(startAngle);
     endAngle = Math.round(endAngle);
 
@@ -398,6 +398,28 @@ module.exports = {
       return this.addHeading(startAngle, (bearingdiff * -1) / 2);
     }
   },
+};
+
+
+/***/ }),
+
+/***/ "./src/const.js":
+/*!**********************!*\
+  !*** ./src/const.js ***!
+  \**********************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = {
+  KM_TO_NM: 0.539957,
+  NM_TO_KM: 1.852,
+  HOUR: 3600,
+  KM_IN_DEG: 111.12,
+  NM_IN_DEG: 60,
+  NM_TO_FEET: 6076,
+  KM_TO_FEET: 3280.84,
+  RADIUS_IN_M: 6378137, //radius earth at equator
+  MEAN_RADIUS_IN_M: 6371000, //earth mean radius
 };
 
 
@@ -572,11 +594,7 @@ const {
   getDistanceFromSpeedTime,
   crossTrackDistanceTo,
 } = __webpack_require__(/*! ./distance */ "./src/distance.js");
-const {
-  getIntersectionPoint,
-  getPostionFromBearingAndDistance,
-  mercator,
-} = __webpack_require__(/*! ./position */ "./src/position.js");
+const { getIntersectionPoint, getPosBngDist, mercator } = __webpack_require__(/*! ./position */ "./src/position.js");
 const { humanTime } = __webpack_require__(/*! ./time */ "./src/time.js");
 const { GDP_smoother } = __webpack_require__(/*! ./smoothing */ "./src/smoothing.js");
 
@@ -596,7 +614,7 @@ module.exports = (() => {
     getDistanceFromSpeedTime,
     crossTrackDistanceTo,
     getIntersectionPoint,
-    getPostionFromBearingAndDistance,
+    getPosBngDist,
     mercator,
     humanTime,
     GDP_smoother,
@@ -629,7 +647,6 @@ const processDMS = (position, options) => {
       Math.abs(position)
     ) {
       if (Math.abs(position) > 180) throw "Position Out of Bounds";
-
       return Number(position);
     }
 
@@ -804,7 +821,7 @@ module.exports = validateDMSstring;
 /**
  * parseDMS
  *
- * Versitle parsing of human readbale GPS data into decimal format format.  Handles awide
+ * Versitle parsing of human readable GPS data into decimal format.  Handles a wide
  * variety of data entry to allow users flexibility in doing data entry.
  *
  * It can also handle deeply nested diverse data formats and return the information formated
@@ -816,7 +833,6 @@ module.exports = validateDMSstring;
  * Adapted and built from Chris Veness original script
  *  * http://www.movable-type.co.uk/scripts/latlong.htmlarses
  *
- * FOr more detail see:  https://github.com/foolishsailor/geo
  *
  */
 
@@ -850,7 +866,6 @@ const parseDMS = (data, options = {}) => {
     return options.flatten
       ? data.reduce((a, c) => a.concat(parseDMS(c, options)), [])
       : data.map((item) => parseDMS(item, options));
-  //
 
   //Check if object with lat lon
   if (typeof data === "object") {
@@ -873,45 +888,52 @@ module.exports = parseDMS;
   !*** ./src/position.js ***!
   \*************************/
 /*! no static exports found */
-/***/ (function(module, exports) {
+/***/ (function(module, exports, __webpack_require__) {
 
-const getPostionFromBearingAndDistance = (waypoint, distance, bearing) => {
-  let position = {
-    lat: waypoint.lat(),
-    lng: waypoint.lng(),
-  };
+__webpack_require__(/*! ./prototypes */ "./src/prototypes.js");
+const geo_const = __webpack_require__(/*! ./const */ "./src/const.js");
 
+/**
+ * getPositionFromBearingAndDistance
+ *
+ * Use origin point, bearing and distance moved to calculate new position
+ * @param {object} point - origin point
+ *  @param {number} point.lat
+ *  @param {number} point.lon
+ * @param {number} distance - distance travelled
+ * @param {number} bearing - direction travelled
+ *
+ * @return {object}
+ *  @param {number} lat
+ *  @param {number} lon
+ */
+const getPosBngDist = (point, distance, bearing) => {
   dist = distance / geo_const.MEAN_RADIUS_IN_M / 1000;
 
-  let brng = (Number(bearing) * Math.PI) / 180;
-  let lat1 = position.lat;
-  lat1 = (lat1 * Math.PI) / 180;
-  let lon1 = position.lng;
-  lon1 = (lon1 * Math.PI) / 180;
-
-  let lat2 = Math.asin(
-    Math.sin(lat1) * Math.cos(dist) +
-      Math.cos(lat1) * Math.sin(dist) * Math.cos(brng)
-  );
-
-  let lon2 =
-    lon1 +
-    Math.atan2(
-      Math.sin(brng) * Math.sin(dist) * Math.cos(lat1),
-      Math.cos(dist) - Math.sin(lat1) * Math.sin(lat2)
-    );
+  let brng = Number(bearing).toRad(),
+    lat1 = point.lat.toRad(),
+    lon1 = point.lon.toRad(),
+    lat2 = Math.asin(
+      Math.sin(lat1) * Math.cos(distance) +
+        Math.cos(lat1) * Math.sin(distance) * Math.cos(brng)
+    ),
+    lon2 =
+      lon1 +
+      Math.atan2(
+        Math.sin(brng) * Math.sin(distance) * Math.cos(lat1),
+        Math.cos(distance) - Math.sin(lat1) * Math.sin(lat2)
+      );
 
   return {
-    lat: (lat2 * 180) / Math.PI,
-    lng: (lon2 * 180) / Math.PI,
+    lat: lat2.toDeg(),
+    lon: lon2.toDeg(),
   };
 };
 
 /**
-    getIntersection
+    getIntersectionPoint
 
-    Calculate intersection point between two lines/routes in lat and lon.  They are not required to overlap to calulate
-
+    Calculate intersection point between two lines/routes in lat and lon.  They are not required to overlap to calculate
    
       @property {object} lineA
         @property {number} lat
@@ -964,7 +986,7 @@ const mercator = ({ latitude, longitude }) => {
 
 module.exports = {
   getIntersectionPoint,
-  getPostionFromBearingAndDistance,
+  getPosBngDist,
   mercator,
 };
 
