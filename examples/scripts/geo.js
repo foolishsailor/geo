@@ -908,20 +908,23 @@ const geo_const = __webpack_require__(/*! ./const */ "./src/const.js");
  *  @param {number} lon
  */
 const getPosBngDist = (point, distance, bearing) => {
-  dist = distance / geo_const.MEAN_RADIUS_IN_M / 1000;
+  const dist = distance / geo_const.MEAN_RADIUS_IN_M;
+  const brng = Number(bearing).toRad();
 
-  let brng = Number(bearing).toRad(),
-    lat1 = point.lat.toRad(),
-    lon1 = point.lon.toRad(),
-    lat2 = Math.asin(
-      Math.sin(lat1) * Math.cos(distance) +
-        Math.cos(lat1) * Math.sin(distance) * Math.cos(brng)
+  const lat1 = point.lat.toRad(),
+    lon1 = point.lon.toRad();
+
+  const lat2 = Math.asin(
+      Math.sin(lat1) * Math.cos(dist) +
+        Math.cos(lat1) * Math.sin(dist) * Math.cos(brng)
     ),
     lon2 =
       lon1 +
       Math.atan2(
-        Math.sin(brng) * Math.sin(distance) * Math.cos(lat1),
-        Math.cos(distance) - Math.sin(lat1) * Math.sin(lat2)
+        Math.sin(brng) * Math.sin(dist) * Math.cos(lat1),
+        Math.cos(dist) -
+          Math.sin(lat1) * Math.sin(lat1) * Math.cos(dist) +
+          Math.cos(lat1) * Math.sin(dist) * Math.cos(brng)
       );
 
   return {
