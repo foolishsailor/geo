@@ -18,7 +18,8 @@
 
 const processPointObject = require("./components/processPointObject");
 const processDMS = require("./components/processDMS");
-require("../prototypes");
+
+require("../utils/prototypes");
 
 /**
  *  parseDMS - main parsing function

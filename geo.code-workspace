@@ -5,10 +5,10 @@
     }
   ],
   "settings": {
-    "liveServer.settings.root": "/examples/",
+    "liveServer.settings.root": "/examples",
     "liveSassCompile.settings.formats": [
       {
-        "format": "expanded",
+        "format": "compact",
         "extensionName": ".css",
         "savePath": "/examples"
       }

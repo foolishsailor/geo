@@ -2,8 +2,8 @@ import loader from "./loader.js";
 
 export default (() => {
   loader("parseAndValidateString", "parseAndValidateString");
-  loader("parseAndValidateArray");
-  loader("getPosBngDist", "getPosBngDist");
+  loader("parseAndValidateArray", "parseAndValidateArray");
+  loader("getDestinationPoint", "getDestinationPoint");
   loader("getIntersectionPoint");
 
   loader("validateBearings");

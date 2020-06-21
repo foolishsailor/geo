@@ -11,21 +11,23 @@
     <label for="dms_object">DMS String</label>
     <textarea
       rows="5"
-      onfocus="parseGeoScript.clearInputError(event)"
+      onfocus="parseAndValidateArray.clearInputError(event)"
       class="input---block"
       type="text"
       name="dms_object"
       placeholder="Enter object/array here"
-    ></textarea>
+    >
+{"lat": "83°37 47.9 N", "lon": "53°37 27.9 W" }</textarea
+    >
   </div>
-  <button onclick="parseGeoScript.parseDMS(event)">Go!</button>
+  <button onclick="parseAndValidateArray.parseDMS(event)">Go!</button>
   <div class="input_group">
-    <label for="d_output">Output</label>
+    <label for="d_obj_output">Output</label>
     <textarea
       rows="5"
       class="input---block input---notInteractive"
       type="text"
-      name="d_output"
+      name="d_obj_output"
       placeholder="Decimal format will appear here"
     ></textarea>
   </div>

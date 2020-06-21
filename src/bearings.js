@@ -1,5 +1,5 @@
 const parseDMS = require("./parseDMS");
-require("./prototypes");
+require("./utils/prototypes");
 
 const handleError = (message) => {
   throw { error: "Invalid Bearings", message };

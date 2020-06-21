@@ -1,5 +1,5 @@
 <div class="card__header">
-  <h3 class="header__title">getPosFromBngAndDist()</h3>
+  <h3 class="header__title">getDestinationPoint()</h3>
   <h4 class="header__sub-title">Get position from bearing and distance</h4>
   <p class="header__description">
     Use origin point, bearing and distance to calculate new position
@@ -16,7 +16,7 @@
         type="text"
         class="input---block"
         name="gpbd_origin_lat"
-        value="23 34' 59"
+        value="51.47788"
       />
     </div>
     <div class="input_group">
@@ -25,7 +25,7 @@
         type="text"
         class="input---block"
         name="gpbd_origin_lon"
-        value="114 19'44"
+        value=" -0.00147"
       />
     </div>
     <p class="card__body-text">&nbsp</p>
@@ -36,6 +36,7 @@
         class="input---block"
         name="gpbd_bearing"
         placeholder="Direction travelled"
+        value="300.7"
       />
     </div>
     <div class="input_group">
@@ -45,10 +46,13 @@
         class="input---block"
         name="gpbd_distance"
         placeholder="Distance traveled"
+        value="7794"
       />
     </div>
   </div>
-  <button onclick="getPosBngDist.getDestinationPoint(event)">Go!</button>
+  <button onclick="getDestinationPoint.getDestinationPoint(event)">
+    Go!
+  </button>
   <div>
     <p class="card__body-text">
       Destination

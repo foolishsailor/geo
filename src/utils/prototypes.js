@@ -1,4 +1,5 @@
-const parseDMS = require("./parseDMS");
+const parseDMS = require("../parseDMS");
+const geo_const = require("./const");
 
 Number.prototype.toFixedNumber = function (digits, base) {
   var pow = Math.pow(base || 10, digits);
@@ -44,6 +45,18 @@ Number.prototype.toLat = function () {
 Number.prototype.toLon = function () {
   // convert numeric degrees to deg/min/sec longitude
   return this.toDMS() + (this > 0 ? "E" : "W");
+};
+
+Number.prototype.metersToKm = function () {
+  return this * geo_const.METER_TO_KM;
+};
+
+Number.prototype.metersToMile = function () {
+  return this * geo_const.METER_TO_MILE;
+};
+
+Number.prototype.metersToNm = function () {
+  return this * geo_const.METER_TO_NM;
 };
 
 /**

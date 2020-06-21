@@ -1,5 +1,9 @@
-require("./prototypes");
-const geo_const = require("./const");
+require("./utils/prototypes");
+const geo_const = require("./utils/const");
+const surface = require("./surface");
+const measurement = require("./utils/measurement");
+const formatPoint = require("./utils/formatPoint");
+const { pipe } = require("./utils/compose");
 
 /**
  * getPositionFromBearingAndDistance
@@ -15,30 +19,28 @@ const geo_const = require("./const");
  *  @param {number} lat
  *  @param {number} lon
  */
-const getPosBngDist = (point, distance, bearing) => {
-  const dist = distance / geo_const.MEAN_RADIUS_IN_M;
-  const brng = Number(bearing).toRad();
+const getDestinationPoint = ({
+  point,
+  bearing,
+  surfaceType = "spherical",
+  formatType = "DMS",
+  ...rest
+}) => {
+  //Composition approach
+  const process = pipe(
+    measurement, //get measurment unit user choose and apply values
+    surface(surfaceType).getDestinationPoint, //apply chosen surface type formula
+    formatPoint //apply chosen format
+  );
 
-  const lat1 = point.lat.toRad(),
-    lon1 = point.lon.toRad();
-
-  const lat2 = Math.asin(
-      Math.sin(lat1) * Math.cos(dist) +
-        Math.cos(lat1) * Math.sin(dist) * Math.cos(brng)
-    ),
-    lon2 =
-      lon1 +
-      Math.atan2(
-        Math.sin(brng) * Math.sin(dist) * Math.cos(lat1),
-        Math.cos(dist) -
-          Math.sin(lat1) * Math.sin(lat1) * Math.cos(dist) +
-          Math.cos(lat1) * Math.sin(dist) * Math.cos(brng)
-      );
-
-  return {
-    lat: lat2.toDeg(),
-    lon: lon2.toDeg(),
-  };
+  return process({
+    point: {
+      lat: point.lat.toRad(),
+      lon: point.lon.toRad(),
+    },
+    bearing: Number(bearing).toRad(),
+    ...rest,
+  });
 };
 
 /**
@@ -97,6 +99,7 @@ const mercator = ({ latitude, longitude }) => {
 
 module.exports = {
   getIntersectionPoint,
-  getPosBngDist,
+  getDestinationPoint,
+
   mercator,
 };

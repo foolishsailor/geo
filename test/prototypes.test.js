@@ -1,5 +1,5 @@
 const { defaults } = require("./test_defaults");
-require("../src/prototypes");
+require("../src/utils/prototypes");
 
 describe("Number extension", () => {
   it("toFixedNumber() | Rounds number to X decimal places", () => {

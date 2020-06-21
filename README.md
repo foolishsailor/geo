@@ -25,6 +25,7 @@ ToDo:
 - show usage in parsing array of DMS gps
 - show how cleans data
 - usage in form
+- each distance function parses inteval type and returns in that type i.e. Nm or M or Km
 
 ## Installation
 

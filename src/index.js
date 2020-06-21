@@ -7,16 +7,23 @@ const {
   invertHDG,
   findMiddleAngle,
 } = require("./bearings");
-const { getBoundsOfData, getMinMaxAvgFromArray } = require("./arrayUtils");
+const {
+  getBoundsOfData,
+  getMinMaxAvgFromArray,
+} = require("./utils/arrayUtils");
 const {
   getDistanceCos,
   getDistanceHaversine,
   getDistanceFromSpeedTime,
   crossTrackDistanceTo,
 } = require("./distance");
-const { getIntersectionPoint, getPosBngDist, mercator } = require("./position");
-const { humanTime } = require("./time");
-const { GDP_smoother } = require("./smoothing");
+const {
+  getIntersectionPoint,
+  getDestinationPoint,
+  mercator,
+} = require("./position");
+const { humanTime } = require("./utils/time");
+const { GDP_smoother } = require("./utils/smoothing");
 
 module.exports = (() => {
   return {
@@ -34,7 +41,7 @@ module.exports = (() => {
     getDistanceFromSpeedTime,
     crossTrackDistanceTo,
     getIntersectionPoint,
-    getPosBngDist,
+    getDestinationPoint,
     mercator,
     humanTime,
     GDP_smoother,

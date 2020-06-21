@@ -208,3 +208,4 @@ img { vertical-align: middle; }
 button { min-width: 100px; max-height: 50px; margin: 10px; padding: 10px; border: none; border-radius: 100px; font-size: 1.6rem; color: var(--text-light); outline: none; font-weight: 700; background-color: var(--text-dark); -webkit-box-shadow: 0px 2px 4px -1px rgba(0, 0, 0, 0.2), 0px 4px 5px 0px rgba(0, 0, 0, 0.14), 0px 1px 10px 0px rgba(0, 0, 0, 0.12); box-shadow: 0px 2px 4px -1px rgba(0, 0, 0, 0.2), 0px 4px 5px 0px rgba(0, 0, 0, 0.14), 0px 1px 10px 0px rgba(0, 0, 0, 0.12); -webkit-transition: 100ms ease-in-out; transition: 100ms ease-in-out; }
 
 button:active { -webkit-transform: scale(0.98, 0.98); transform: scale(0.98, 0.98); -webkit-box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.2), 0px 1px 1px 0px rgba(0, 0, 0, 0.14), 0px 2px 1px -1px rgba(0, 0, 0, 0.12); box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.2), 0px 1px 1px 0px rgba(0, 0, 0, 0.14), 0px 2px 1px -1px rgba(0, 0, 0, 0.12); }
+/*# sourceMappingURL=index.css.map */

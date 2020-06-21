@@ -96,88 +96,6 @@ return /******/ (function(modules) { // webpackBootstrap
 /************************************************************************/
 /******/ ({
 
-/***/ "./src/arrayUtils.js":
-/*!***************************!*\
-  !*** ./src/arrayUtils.js ***!
-  \***************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-/**
-      Get min, max, avg of a given property from array and filters out non numbers or bad data
-
-      @param {object} arrs
-        @property {array} array - Array of racedata objects to get min,max, avg from
-        @property {object} dataSource - propery of racedata object to use as basis for reducing array
-
-      @returns {object}
-        @property {number} max
-        @property {number} min
-        @property {number} avg
-
-    */
-const getMinMaxAvgFromArray = (newArray) => {
-  //strips out bad data
-  let max = newArray.reduce(function (a, b) {
-    if (isNaN(a) || a === null || a === "") a = -Infinity;
-    if (isNaN(b) || b === null || b === "") b = -Infinity;
-    return Math.max(a, b);
-  }, -Infinity);
-
-  let min = newArray.reduce(function (a, b) {
-    if (isNaN(a) || a === null || a === "") a = Infinity;
-    if (isNaN(b) || b === null || b === "") b = Infinity;
-    return Math.min(a, b);
-  }, Infinity);
-
-  let avg =
-    newArray.reduce(function (previous, current) {
-      if (isNaN(current) || current === null || current === "") return previous;
-      return previous + Number(current);
-    }, 0) / newArray.length;
-
-  return { min, max, avg };
-};
-
-/**
- * getBoundsOfData
- *
- * Takes an array of geoJSON objects and returns a boundary box containeing those values
- * @param {array} data array of geoJSON object
- * @param {object} geoJSON
- * @property {number} lat
- * @property {number} lon
- *
- * @returns {object} Return object has four cornes of bounds of data set
- * @property {latMin} latMin
- * @property {latMax} latMax
- * @property {lonMin}
- * @property {lonMax}
- */
-const getBoundsOfData = (data) => {
-  const boundsObject = data.reduce(
-    function (a, c) {
-      return {
-        latMin: isNaN(a.latMin) || a.latMin > c.lat ? c.lat : a.latMin,
-        latMax: isNaN(a.latMax) || a.latMax < c.lat ? c.lat : a.latMax,
-        lngMin: isNaN(a.lngMin) || a.lngMin > c.lng ? c.lng : a.lngMin,
-        lngMax: isNaN(a.lngMax) || a.lngMax < c.lng ? c.lng : a.lngMax,
-      };
-    },
-    {
-      latMin: Infinity,
-      latMax: -Infinity,
-      lngMin: Infinity,
-      lngMax: -Infinity,
-    }
-  );
-};
-
-module.exports = { getMinMaxAvgFromArray, getBoundsOfData };
-
-
-/***/ }),
-
 /***/ "./src/bearings.js":
 /*!*************************!*\
   !*** ./src/bearings.js ***!
@@ -186,7 +104,7 @@ module.exports = { getMinMaxAvgFromArray, getBoundsOfData };
 /***/ (function(module, exports, __webpack_require__) {
 
 const parseDMS = __webpack_require__(/*! ./parseDMS */ "./src/parseDMS/index.js");
-__webpack_require__(/*! ./prototypes */ "./src/prototypes.js");
+__webpack_require__(/*! ./utils/prototypes */ "./src/utils/prototypes.js");
 
 const handleError = (message) => {
   throw { error: "Invalid Bearings", message };
@@ -403,28 +321,6 @@ module.exports = {
 
 /***/ }),
 
-/***/ "./src/const.js":
-/*!**********************!*\
-  !*** ./src/const.js ***!
-  \**********************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-module.exports = {
-  KM_TO_NM: 0.539957,
-  NM_TO_KM: 1.852,
-  HOUR: 3600,
-  KM_IN_DEG: 111.12,
-  NM_IN_DEG: 60,
-  NM_TO_FEET: 6076,
-  KM_TO_FEET: 3280.84,
-  RADIUS_IN_M: 6378137, //radius earth at equator
-  MEAN_RADIUS_IN_M: 6371000, //earth mean radius
-};
-
-
-/***/ }),
-
 /***/ "./src/distance.js":
 /*!*************************!*\
   !*** ./src/distance.js ***!
@@ -587,16 +483,23 @@ const {
   invertHDG,
   findMiddleAngle,
 } = __webpack_require__(/*! ./bearings */ "./src/bearings.js");
-const { getBoundsOfData, getMinMaxAvgFromArray } = __webpack_require__(/*! ./arrayUtils */ "./src/arrayUtils.js");
+const {
+  getBoundsOfData,
+  getMinMaxAvgFromArray,
+} = __webpack_require__(/*! ./utils/arrayUtils */ "./src/utils/arrayUtils.js");
 const {
   getDistanceCos,
   getDistanceHaversine,
   getDistanceFromSpeedTime,
   crossTrackDistanceTo,
 } = __webpack_require__(/*! ./distance */ "./src/distance.js");
-const { getIntersectionPoint, getPosBngDist, mercator } = __webpack_require__(/*! ./position */ "./src/position.js");
-const { humanTime } = __webpack_require__(/*! ./time */ "./src/time.js");
-const { GDP_smoother } = __webpack_require__(/*! ./smoothing */ "./src/smoothing.js");
+const {
+  getIntersectionPoint,
+  getDestinationPoint,
+  mercator,
+} = __webpack_require__(/*! ./position */ "./src/position.js");
+const { humanTime } = __webpack_require__(/*! ./utils/time */ "./src/utils/time.js");
+const { GDP_smoother } = __webpack_require__(/*! ./utils/smoothing */ "./src/utils/smoothing.js");
 
 module.exports = (() => {
   return {
@@ -614,7 +517,7 @@ module.exports = (() => {
     getDistanceFromSpeedTime,
     crossTrackDistanceTo,
     getIntersectionPoint,
-    getPosBngDist,
+    getDestinationPoint,
     mercator,
     humanTime,
     GDP_smoother,
@@ -732,6 +635,7 @@ const isValidGeoObject = (point) => {
 };
 
 const processPointObject = (data, options, func) => {
+  console.log("process obj", data, options, func);
   if (isValidGeoObject) {
     const lat =
       Math.abs(parseFloat(data.lat)) > 90
@@ -747,6 +651,7 @@ const processPointObject = (data, options, func) => {
         : func(data.lon, options);
 
     if (!options.continueOnError) {
+      console.log("this", lat, lon);
       if (lat.error) throw lat.error;
       if (lon.error) throw lon.error;
     }
@@ -838,7 +743,8 @@ module.exports = validateDMSstring;
 
 const processPointObject = __webpack_require__(/*! ./components/processPointObject */ "./src/parseDMS/components/processPointObject.js");
 const processDMS = __webpack_require__(/*! ./components/processDMS */ "./src/parseDMS/components/processDMS.js");
-__webpack_require__(/*! ../prototypes */ "./src/prototypes.js");
+
+__webpack_require__(/*! ../utils/prototypes */ "./src/utils/prototypes.js");
 
 /**
  *  parseDMS - main parsing function
@@ -890,8 +796,12 @@ module.exports = parseDMS;
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! ./prototypes */ "./src/prototypes.js");
-const geo_const = __webpack_require__(/*! ./const */ "./src/const.js");
+__webpack_require__(/*! ./utils/prototypes */ "./src/utils/prototypes.js");
+const geo_const = __webpack_require__(/*! ./utils/const */ "./src/utils/const.js");
+const surface_spherical = __webpack_require__(/*! ./surface/surface_spherical */ "./src/surface/surface_spherical.js");
+const measurement = __webpack_require__(/*! ./utils/measurement */ "./src/utils/measurement.js");
+const formatPoint = __webpack_require__(/*! ./utils/formatPoint */ "./src/utils/formatPoint.js");
+const { pipe } = __webpack_require__(/*! ./utils/compose */ "./src/utils/compose.js");
 
 /**
  * getPositionFromBearingAndDistance
@@ -907,29 +817,14 @@ const geo_const = __webpack_require__(/*! ./const */ "./src/const.js");
  *  @param {number} lat
  *  @param {number} lon
  */
-const getPosBngDist = (point, distance, bearing) => {
-  const dist = distance / geo_const.MEAN_RADIUS_IN_M;
-  const brng = Number(bearing).toRad();
-
-  const lat1 = point.lat.toRad(),
-    lon1 = point.lon.toRad();
-
-  const lat2 = Math.asin(
-      Math.sin(lat1) * Math.cos(dist) +
-        Math.cos(lat1) * Math.sin(dist) * Math.cos(brng)
-    ),
-    lon2 =
-      lon1 +
-      Math.atan2(
-        Math.sin(brng) * Math.sin(dist) * Math.cos(lat1),
-        Math.cos(dist) -
-          Math.sin(lat1) * Math.sin(lat1) * Math.cos(dist) +
-          Math.cos(lat1) * Math.sin(dist) * Math.cos(brng)
-      );
-
+const getDestinationPoint = ({ point, bearing, ...rest }) => {
   return {
-    lat: lat2.toDeg(),
-    lon: lon2.toDeg(),
+    point: {
+      lat: point.lat.toRad(),
+      lon: point.lon.toRad(),
+    },
+    bearing: Number(bearing).toRad(),
+    ...rest,
   };
 };
 
@@ -989,21 +884,268 @@ const mercator = ({ latitude, longitude }) => {
 
 module.exports = {
   getIntersectionPoint,
-  getPosBngDist,
+  getDestinationPoint: pipe(
+    measurement, //get measurment unit user choose and apply values
+    getDestinationPoint, //prepare user data to entry into formula
+    surface_spherical.getDestinationPoint, //apply chosen formula
+    formatPoint //apply chosen format
+  ),
+
   mercator,
 };
 
 
 /***/ }),
 
-/***/ "./src/prototypes.js":
-/*!***************************!*\
-  !*** ./src/prototypes.js ***!
-  \***************************/
+/***/ "./src/surface/surface_spherical.js":
+/*!******************************************!*\
+  !*** ./src/surface/surface_spherical.js ***!
+  \******************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-const parseDMS = __webpack_require__(/*! ./parseDMS */ "./src/parseDMS/index.js");
+__webpack_require__(/*! ../utils/prototypes */ "./src/utils/prototypes.js");
+/**
+ * Formula for calculations using simple trigonometry to calculate based on spherical surface model
+ *
+ */
+
+/** getDestinationPoint
+ * Spherical formula for calulating destination point based on distance and bearing.
+ * All inputs in radians
+ * @param {object} point - origin point
+ * @param {number} distance - distance/ radius from previous function in composition
+ * @param {number} bearing - direction traveled in radians
+ * */
+const getDestinationPoint = ({ point, distance, bearing }) => {
+  const lat1 = point.lat,
+    lon1 = point.lon;
+
+  return {
+    lat: Math.asin(
+      Math.sin(lat1) * Math.cos(distance) +
+        Math.cos(lat1) * Math.sin(distance) * Math.cos(bearing)
+    ).toDeg(),
+    lon: (
+      lon1 +
+      Math.atan2(
+        Math.sin(bearing) * Math.sin(distance) * Math.cos(lat1),
+        Math.cos(distance) -
+          Math.sin(lat1) * Math.sin(lat1) * Math.cos(distance) +
+          Math.cos(lat1) * Math.sin(distance) * Math.cos(bearing)
+      )
+    ).toDeg(),
+  };
+};
+
+module.exports = { getDestinationPoint };
+
+
+/***/ }),
+
+/***/ "./src/utils/arrayUtils.js":
+/*!*********************************!*\
+  !*** ./src/utils/arrayUtils.js ***!
+  \*********************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+      Get min, max, avg of a given property from array and filters out non numbers or bad data
+
+      @param {object} arrs
+        @property {array} array - Array of racedata objects to get min,max, avg from
+        @property {object} dataSource - propery of racedata object to use as basis for reducing array
+
+      @returns {object}
+        @property {number} max
+        @property {number} min
+        @property {number} avg
+
+    */
+const getMinMaxAvgFromArray = (newArray) => {
+  //strips out bad data
+  let max = newArray.reduce(function (a, b) {
+    if (isNaN(a) || a === null || a === "") a = -Infinity;
+    if (isNaN(b) || b === null || b === "") b = -Infinity;
+    return Math.max(a, b);
+  }, -Infinity);
+
+  let min = newArray.reduce(function (a, b) {
+    if (isNaN(a) || a === null || a === "") a = Infinity;
+    if (isNaN(b) || b === null || b === "") b = Infinity;
+    return Math.min(a, b);
+  }, Infinity);
+
+  let avg =
+    newArray.reduce(function (previous, current) {
+      if (isNaN(current) || current === null || current === "") return previous;
+      return previous + Number(current);
+    }, 0) / newArray.length;
+
+  return { min, max, avg };
+};
+
+/**
+ * getBoundsOfData
+ *
+ * Takes an array of geoJSON objects and returns a boundary box containeing those values
+ * @param {array} data array of geoJSON object
+ * @param {object} geoJSON
+ * @property {number} lat
+ * @property {number} lon
+ *
+ * @returns {object} Return object has four cornes of bounds of data set
+ * @property {latMin} latMin
+ * @property {latMax} latMax
+ * @property {lonMin}
+ * @property {lonMax}
+ */
+const getBoundsOfData = (data) => {
+  const boundsObject = data.reduce(
+    function (a, c) {
+      return {
+        latMin: isNaN(a.latMin) || a.latMin > c.lat ? c.lat : a.latMin,
+        latMax: isNaN(a.latMax) || a.latMax < c.lat ? c.lat : a.latMax,
+        lngMin: isNaN(a.lngMin) || a.lngMin > c.lng ? c.lng : a.lngMin,
+        lngMax: isNaN(a.lngMax) || a.lngMax < c.lng ? c.lng : a.lngMax,
+      };
+    },
+    {
+      latMin: Infinity,
+      latMax: -Infinity,
+      lngMin: Infinity,
+      lngMax: -Infinity,
+    }
+  );
+};
+
+module.exports = { getMinMaxAvgFromArray, getBoundsOfData };
+
+
+/***/ }),
+
+/***/ "./src/utils/compose.js":
+/*!******************************!*\
+  !*** ./src/utils/compose.js ***!
+  \******************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * compose
+ *
+ * Composition utility to compose multiple functions with arrays of parameters
+ */
+
+/*
+ const compose = (...fns) => (...args) =>
+  fns.reduceRight((acc, fn) => [fn(...args)], args);*/
+
+const compose = (...fns) => (args) =>
+  fns.reduceRight((acc, fn) => fn(acc), args);
+
+const pipe = (...fns) => (x) => fns.reduce((v, f) => f(v), x);
+
+module.exports = { compose, pipe };
+
+
+/***/ }),
+
+/***/ "./src/utils/const.js":
+/*!****************************!*\
+  !*** ./src/utils/const.js ***!
+  \****************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = {
+  METER_TO_KM: 0.0001,
+  METER_TO_MILE: 0.000621371,
+  METER_TO_NM: 1 / 1852,
+
+  KM_TO_NM: 0.539957,
+  NM_TO_KM: 1.852,
+  HOUR: 3600,
+  KM_IN_DEG: 111.12,
+  NM_IN_DEG: 60,
+  NM_TO_FEET: 6076,
+  KM_TO_FEET: 3280.84,
+  RADIUS_IN_M: 6378137, //radius earth at equator in meters
+  MEAN_RADIUS_IN_M: 6371e3, //earth mean radius
+};
+
+
+/***/ }),
+
+/***/ "./src/utils/formatPoint.js":
+/*!**********************************!*\
+  !*** ./src/utils/formatPoint.js ***!
+  \**********************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+const formatPoint = (point) => {
+  return { lat: point.lat.toLat(), lon: point.lon.toLon() };
+};
+
+module.exports = formatPoint;
+
+
+/***/ }),
+
+/***/ "./src/utils/measurement.js":
+/*!**********************************!*\
+  !*** ./src/utils/measurement.js ***!
+  \**********************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+const geo_const = __webpack_require__(/*! ./const */ "./src/utils/const.js");
+
+const measurement = ({ distance, ...rest }) => {
+  let divisor;
+
+  switch (true) {
+    case /(NM)/i.test(distance): //nautical miles
+      divisor = geo_const.MEAN_RADIUS_IN_M * geo_const.METER_TO_NM;
+      break;
+
+    case /(KM)/i.test(distance): //Kilometers
+      divisor = geo_const.MEAN_RADIUS_IN_M * geo_const.METER_TO_KM;
+      break;
+
+    case /(M)/.test(distance): //Miles
+      divisor = geo_const.MEAN_RADIUS_IN_M * geo_const.METER_TO_MILE;
+      break;
+
+    case /(m)/.test(distance): //meters
+      divisor = geo_const.MEAN_RADIUS_IN_M;
+      break;
+
+    default:
+      throw "No Measurement found";
+  }
+
+  distance = parseFloat(distance) / divisor;
+
+  return { distance, ...rest };
+};
+
+module.exports = measurement;
+
+
+/***/ }),
+
+/***/ "./src/utils/prototypes.js":
+/*!*********************************!*\
+  !*** ./src/utils/prototypes.js ***!
+  \*********************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+const parseDMS = __webpack_require__(/*! ../parseDMS */ "./src/parseDMS/index.js");
+const geo_const = __webpack_require__(/*! ./const */ "./src/utils/const.js");
 
 Number.prototype.toFixedNumber = function (digits, base) {
   var pow = Math.pow(base || 10, digits);
@@ -1051,6 +1193,18 @@ Number.prototype.toLon = function () {
   return this.toDMS() + (this > 0 ? "E" : "W");
 };
 
+Number.prototype.metersToKm = function () {
+  return this * geo_const.METER_TO_KM;
+};
+
+Number.prototype.metersToMile = function () {
+  return this * geo_const.METER_TO_MILE;
+};
+
+Number.prototype.metersToNm = function () {
+  return this * geo_const.METER_TO_NM;
+};
+
 /**
  * Parses human readable DMS string into Decimal format
  *
@@ -1064,10 +1218,10 @@ String.prototype.parseDMS = function () {
 
 /***/ }),
 
-/***/ "./src/smoothing.js":
-/*!**************************!*\
-  !*** ./src/smoothing.js ***!
-  \**************************/
+/***/ "./src/utils/smoothing.js":
+/*!********************************!*\
+  !*** ./src/utils/smoothing.js ***!
+  \********************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -1190,10 +1344,10 @@ module.exports = { GDP_smoother };
 
 /***/ }),
 
-/***/ "./src/time.js":
-/*!*********************!*\
-  !*** ./src/time.js ***!
-  \*********************/
+/***/ "./src/utils/time.js":
+/*!***************************!*\
+  !*** ./src/utils/time.js ***!
+  \***************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 

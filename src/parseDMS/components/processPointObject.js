@@ -5,6 +5,7 @@ const isValidGeoObject = (point) => {
 };
 
 const processPointObject = (data, options, func) => {
+  console.log("process obj", data, options, func);
   if (isValidGeoObject) {
     const lat =
       Math.abs(parseFloat(data.lat)) > 90
@@ -20,6 +21,7 @@ const processPointObject = (data, options, func) => {
         : func(data.lon, options);
 
     if (!options.continueOnError) {
+      console.log("this", lat, lon);
       if (lat.error) throw lat.error;
       if (lon.error) throw lon.error;
     }
