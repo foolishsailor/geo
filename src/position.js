@@ -22,18 +22,16 @@ const { pipe } = require("./utils/compose");
 const getDestinationPoint = ({
   point,
   bearing,
-  surfaceType = "spherical",
+  surfaceType = "Spherical",
   formatType = "DMS",
   ...rest
 }) => {
   //Composition approach
-  const process = pipe(
-    measurement, //get measurment unit user choose and apply values
+
+  return pipe(
     surface(surfaceType).getDestinationPoint, //apply chosen surface type formula
     formatPoint(formatType) //apply chosen format
-  );
-
-  return process({
+  )({
     point: {
       lat: point.lat.toRad(),
       lon: point.lon.toRad(),

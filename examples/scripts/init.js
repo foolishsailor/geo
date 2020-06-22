@@ -9,6 +9,6 @@ export default (() => {
   loader("validateBearings");
   loader("getAvgOfBearings");
   loader("getBngTwoPoints");
-  loader("getBngDiff");
+
   loader("generalBearingFunctions");
 })();

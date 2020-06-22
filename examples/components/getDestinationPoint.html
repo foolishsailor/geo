@@ -6,113 +6,123 @@
   </p>
 </div>
 <div class="card__body card__body___horizontal">
-  <div class="card__body-container">  
+  <div class="card__body-container">
     <h5 class="card__body-header">
       Options
-    </h5>  
-    <p class="card__body-text">
-      Format
-    </p>
-    <div class="segmented_control">
-      <input type="radio" id="dms" name="format" />
-      <label for="dms">DMS</label>
-      <input type="radio" id="cardinal" name="format" />
-      <label for="cardinal">Cardinal</label>
-      <input type="radio" id="decimal" name="format" />
-      <label for="decimal">Decimal</label>
+    </h5>
+    <div class="body-container__item">
+      <p class="card__body-text">
+        Surface Model
+      </p>
+      <p class="card__body-text">
+        Type of formula to use. Spherical is less accurate but also less
+        processor intensive.
+      </p>
+      <div id="gdp_surfaceModel" class="segmented_control"></div>
     </div>
-    <button onclick="getDestinationPoint.getDestinationPoint(event)">
+    <div class="body-container__item">
+      <p class="card__body-text">
+        Output Format
+      </p>
+
+      <div id="gdp_outputFormat" class="segmented_control"></div>
+    </div>
+
+    <button id="getDestination">
       Go!
     </button>
   </div>
   <div class="card__body-container">
     <h5 class="card__body-header">
       Input and Result
-    </h5>  
-    <p class="card__body-text">
-      Origin
-    </p>
-    <div class="input_group">
-      <label for="gdp_origin_lat">Lat</label>
-      <input
-        type="text"
-        class="input---block"
-        name="gdp_origin_lat"
-        value="51.47788"
-      />
+    </h5>
+    <div class="body-container__item">
+      <p class="card__body-text">
+        Origin
+      </p>
+      <div class="input_group">
+        <label for="gdp_origin_lat">Lat</label>
+        <input
+          type="text"
+          class="input---block"
+          name="gdp_origin_lat"
+          value="51.47788"
+        />
+      </div>
+      <div class="input_group">
+        <label for="gdp_origin_lon">Lon</label>
+        <input
+          type="text"
+          class="input---block"
+          name="gdp_origin_lon"
+          value=" -0.00147"
+        />
+      </div>
     </div>
-    <div class="input_group">
-      <label for="gdp_origin_lon">Lon</label>
-      <input
-        type="text"
-        class="input---block"
-        name="gdp_origin_lon"
-        value=" -0.00147"
-      />
+    <div class="body-container__item">
+      <p class="card__body-text">
+        Direction and Distance Travelled
+      </p>
+      <div class="input_group">
+        <label for="gdp_bearing">Bearing</label>
+        <input
+          type="text"
+          class="input---block"
+          name="gdp_bearing"
+          placeholder="Direction travelled"
+          value="300.7"
+        />
+      </div>
+      <div class="input_group">
+        <label for="gdp_distance">Distance</label>
+        <input
+          type="text"
+          class="input---block"
+          name="gdp_distance"
+          placeholder="ex: 1,349Km"
+          value="7794m"
+        />
+      </div>
     </div>
-    <p class="card__body-text">&nbsp</p>
-    <div class="input_group">
-      <label for="gdp_bearing">Bearing</label>
-      <input
-        type="text"
-        class="input---block"
-        name="gdp_bearing"
-        placeholder="Direction travelled"
-        value="300.7"
-      />
-    </div>
-    <div class="input_group">
-      <label for="gdp_distance">Distance</label>
-      <input
-        type="text"
-        class="input---block"
-        name="gdp_distance"
-        placeholder="ex: 1,349Km"
-        value="7794m"
-      />
-    </div>
-    <p class="card__body-text">
-      Destination
-    </p>
-    <div class="input_group input_group---notInteractive">
-      <label for="gdp_dest_lat ">Latitude</label>
-      <input type="text" class="input---block" name="gdp_dest_lat" />
-    </div>
-    <div class="input_group input_group---notInteractive">
-      <label for="gdp_dest_lon">Longitude</label>
-      <input type="text" class="input---block" name="gdp_dest_lon" />
+    <div class="body-container__item">
+      <p class="card__body-text">
+        Destination
+      </p>
+      <div class="input_group input_group---notInteractive">
+        <label for="gdp_dest_lat ">Latitude</label>
+        <input type="text" class="input---block" name="gdp_dest_lat" />
+      </div>
+      <div class="input_group input_group---notInteractive">
+        <label for="gdp_dest_lon">Longitude</label>
+        <input type="text" class="input---block" name="gdp_dest_lon" />
+      </div>
     </div>
   </div>
 
-  
   <div class="card__body-container">
     <h5 class="card__body-header">
-      Simple Implmentation
-    </h5>  
+      Simple Implementation
+    </h5>
     <p class="card__body-text">
-      Process any form of human readable gps data into a decimal format
+      Process wide range of gps position formats into a decimal format. Accepts
+      Object, Array or String.
     </p>
-    <script type=”text/html”>
-      const point = {
-        lat: geo.parseDMS(origin.lat.value),
-        lon: geo.parseDMS(origin.lon.value),
-      };
+    <script type="text/html">
+      const point = geo.parseDMS(origin);
     </script>
     <p class="card__body-text">
-      Process any form of human readable gps data into a decimal format
+      Point must be in Decimal - Ex: 34.2334
     </p>
-    <script type=”text/html”>
+    <p class="card__body-text">
+      Distance requires type [Km , M, NM, m] - Ex: 4,234Km
+    </p>
+    <script type="text/html">
       const destPoint = geo.getDestinationPoint({
         point,
-        distance: distance.value,
-        bearing: Number(bearing.value),
-        formatType: "Cardinal",
+        distance,
+        bearing
       });
-  
-      destination.lat.value = destPoint.lat;
-      destination.lon.value = destPoint.lon;
     </script>
-  
   </div>
 </div>
 <div class="card__footer">More Info</div>

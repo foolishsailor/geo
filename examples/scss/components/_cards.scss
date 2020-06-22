@@ -1,10 +1,9 @@
 .cards {
   position: relative;
   display: flex;
+  flex: 1 1;
   flex-direction: row;
   flex-wrap: wrap;
-  margin-left: -15px;
-  margin-right: -15px;
 }
 
 .card {
@@ -12,7 +11,8 @@
   position: relative;
   display: flex;
   flex-direction: column;
-  flex: 1 1 calc(50% - 30px);
+  flex: 1;
+  flex-wrap: wrap;
   box-sizing: border-box;
   margin: 15px;
   padding: 30px 25px;
@@ -27,9 +27,17 @@
 
   script {
     display: block;
+    padding: 10px;
+    margin: 10px;
+    border-radius: 10px;
+    background-color: rgba(0, 0, 0, 0.1);
     text-align: left;
     font-family: monospace;
     white-space: pre;
+
+    @media all and (max-width: 1000px) {
+      white-space: pre-wrap;
+    }
   }
 }
 
@@ -45,14 +53,23 @@
 }
 
 .card__body-container {
-  padding: 10px;
-  flex: 1;
+  margin: 10px;
+  padding: 20px;
+  flex: 1 1;
+  border-radius: 10px;
+  background-color: rgba(0, 0, 0, 0.1);
+
+  .body-container__item {
+    margin-bottom: 10px;
+  }
 }
 
 .card__body-header {
   color: $text-dark;
   text-align: left;
   font-size: 1.2rem;
+  margin: 0;
+  margin-bottom: 1rem;
 }
 
 .card__body-text {
@@ -80,4 +97,9 @@
 
 .card__body___horizontal {
   flex-direction: row;
+  flex: 1 1;
+
+  @media all and (max-width: 800px) {
+    flex-direction: column;
+  }
 }

@@ -24,6 +24,7 @@ describe("getDestinationPoint()", () => {
       expect.objectContaining({ lat: "51°30'49.55\"N", lon: "000°05'53.81\"W" })
     );
   });
+
   it("should show Cardinal", () => {
     expect(
       getDestinationPoint({
@@ -43,5 +44,17 @@ describe("getDestinationPoint()", () => {
         formatType: "Decimal",
       })
     ).toEqual(expect.objectContaining({ lat: 51.5136, lon: -0.0981 }));
+  });
+
+  it("should show Correct", () => {
+    expect(
+      getDestinationPoint({
+        point: { lat: 50.06632, lon: -5.71475 },
+        distance: "969954.166m",
+        bearing: 9.1418775,
+        formatType: "Decimal",
+        surfaceType: "Ellipsoidal",
+      })
+    ).toEqual(expect.objectContaining({ lat: 58.64402, lon: -3.07009 }));
   });
 });

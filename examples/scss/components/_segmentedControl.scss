@@ -1,18 +1,29 @@
 .segmented_control {
   position: relative;
-  margin: 10px 0;
+  display: flex;
+  margin: 20px 0;
   width: 100%;
 
   input {
     display: none;
+
+    &[type="radio"]:checked + label {
+      font-weight: 700;
+      background: $text-light;
+      color: $background-card;
+    }
+
+    &:hover + label {
+      font-weight: 700;
+      background: $item-dark___hover;
+      color: $background-card;
+    }
   }
 
   label {
     display: inline-block;
-    width: 33%;
-    height: 20px;
-    padding-top: 10px;
-
+    flex: 1;
+    padding: 10px 5px;
     border: 1px solid white;
     text-align: center;
     font-size: 0.8rem;
@@ -20,18 +31,15 @@
     cursor: pointer;
 
     &:first-of-type {
+      margin-right: 0px;
       border-radius: 30px 0 0 30px;
       border-right: none;
     }
 
     &:last-of-type {
+      margin-left: 0px;
       border-radius: 0 30px 30px 0;
       border-left: none;
     }
-  }
-
-  input[type="radio"]:checked + label {
-    background: #fff;
-    color: #333;
   }
 }

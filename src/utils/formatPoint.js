@@ -2,7 +2,6 @@ const formatPoint = (formatType) => {
   switch (formatType) {
     case "DMS":
       return (point) => {
-        console.log("trigger", point);
         return {
           lat: point.lat.toDMSLat(),
           lon: point.lon.toDMSLon(),

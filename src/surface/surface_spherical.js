@@ -1,4 +1,6 @@
+const measurement = require("../utils/measurement");
 require("../utils/prototypes");
+
 /**
  * Formula for calculations using simple trigonometry to calculate based on spherical surface model
  *
@@ -12,8 +14,10 @@ require("../utils/prototypes");
  * @param {number} bearing - direction traveled in radians
  * */
 const getDestinationPoint = ({ point, distance, bearing }) => {
-  const lat1 = point.lat,
-    lon1 = point.lon;
+  const lat1 = point.lat;
+  const lon1 = point.lon;
+
+  distance = measurement(distance);
 
   return {
     lat: Math.asin(

@@ -1,8 +1,9 @@
 :root {
   --background: hsl(230, 17%, 14%);
-  --background-light: hsl(228, 29%, 24%);
+  --background-light: hsl(228, 30%, 47%);
   --background-card: hsl(228, 28%, 20%);
   --background-card___hover: hsl(228, 28%, 28%);
+  --item-dark___hover: hsl(228, 50%, 88%);
   --text-dark: hsl(228, 34%, 66%);
   --text-light: hsl(0, 0%, 100%);
 }
@@ -20,7 +21,10 @@ $background-light: var(--background-light);
 $background-card: var(--background-card);
 $background-card___hover: var(--background-card___hover);
 $text-dark: var(--text-dark);
+$item-dark___hover: var(--item-dark___hover);
 $text-light: var(--text-light);
+
+$number-font: "Titillium Web";
 
 $toggle-background: hsl(230, 22%, 74%);
 $toggle-background-checked: linear-gradient(

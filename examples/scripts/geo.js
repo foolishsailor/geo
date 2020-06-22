@@ -820,18 +820,17 @@ const { pipe } = __webpack_require__(/*! ./utils/compose */ "./src/utils/compose
 const getDestinationPoint = ({
   point,
   bearing,
-  surfaceType = "spherical",
+  surfaceType = "Spherical",
   formatType = "DMS",
   ...rest
 }) => {
   //Composition approach
-  const process = pipe(
+
+  return pipe(
     measurement, //get measurment unit user choose and apply values
     surface(surfaceType).getDestinationPoint, //apply chosen surface type formula
     formatPoint(formatType) //apply chosen format
-  );
-
-  return process({
+  )({
     point: {
       lat: point.lat.toRad(),
       lon: point.lon.toRad(),
@@ -914,17 +913,10 @@ module.exports = {
 
 const spherical = __webpack_require__(/*! ./surface_spherical */ "./src/surface/surface_spherical.js");
 const ellipsoidal = __webpack_require__(/*! ./surface_ellipsoidal */ "./src/surface/surface_ellipsoidal.js");
-const vicenty = __webpack_require__(/*! ./surface_vicenty */ "./src/surface/surface_vicenty.js");
 
 module.exports = (surfaceType) => {
-  switch (surfaceType) {
-    case "vicenty":
-      return vicenty;
-    case "ellipsoidal":
-      return ellipsoidal;
-    default:
-      return spherical;
-  }
+  console.log("trigger", surfaceType);
+  return surfaceType === "Ellipsoidal" ? ellipsoidal : spherical;
 };
 
 
@@ -935,8 +927,93 @@ module.exports = (surfaceType) => {
   !*** ./src/surface/surface_ellipsoidal.js ***!
   \********************************************/
 /*! no static exports found */
-/***/ (function(module, exports) {
+/***/ (function(module, exports, __webpack_require__) {
 
+__webpack_require__(/*! ../utils/prototypes */ "./src/utils/prototypes.js");
+/**
+ * Formula for calculations using simple trigonometry to calculate based on spherical surface model
+ * Based on the work by Chriss Veness:  www.movable-type.co.uk/scripts/latlong-ellipsoidal-vincenty.html
+ */
+
+/** getDestinationPoint
+ * Spherical formula for calulating destination point based on distance and bearing.
+ * All inputs in radians
+ * @param {object} point - origin point
+ * @param {number} distance - distance/ radius from previous function in composition
+ * @param {number} bearing - direction traveled in radians
+ * */
+const getDestinationPoint = ({ point, distance, bearing }) => {
+  console.log("Trigger This");
+  const lat1 = point.lat,
+    lon1 = point.lon,
+    { a, b, f } = { a: 6378137, b: 6356752.314245, f: 1 / 298.257223563 },
+    sinBearing = Math.sin(bearing),
+    cosBearing = Math.cos(bearing),
+    tanU1 = (1 - f) * Math.tan(lat1),
+    cosU1 = 1 / Math.sqrt(1 + tanU1 * tanU1),
+    sinU1 = tanU1 * cosU1,
+    σ1 = Math.atan2(tanU1, cosBearing), // σ1 = angular distance on the sphere from the equator to P1
+    sinα = cosU1 * sinBearing, // α = azimuth of the geodesic at the equator
+    cosSqα = 1 - sinα * sinα,
+    uSq = (cosSqα * (a * a - b * b)) / (b * b),
+    A = 1 + (uSq / 16384) * (4096 + uSq * (-768 + uSq * (320 - 175 * uSq))),
+    B = (uSq / 1024) * (256 + uSq * (-128 + uSq * (74 - 47 * uSq)));
+
+  let σ = distance / (b * A),
+    sinσ = null,
+    cosσ = null,
+    Δσ = null; // σ = angular distance P₁ P₂ on the sphere
+  let cos2σₘ = null; // σₘ = angular distance on the sphere from the equator to the midpoint of the line
+
+  let σʹ = null,
+    iterations = 0;
+  do {
+    cos2σₘ = Math.cos(2 * σ1 + σ);
+    sinσ = Math.sin(σ);
+    cosσ = Math.cos(σ);
+    Δσ =
+      B *
+      sinσ *
+      (cos2σₘ +
+        (B / 4) *
+          (cosσ * (-1 + 2 * cos2σₘ * cos2σₘ) -
+            (B / 6) *
+              cos2σₘ *
+              (-3 + 4 * sinσ * sinσ) *
+              (-3 + 4 * cos2σₘ * cos2σₘ)));
+    σʹ = σ;
+    σ = distance / (b * A) + Δσ;
+  } while (Math.abs(σ - σʹ) > 1e-12 && ++iterations < 100);
+  if (iterations >= 100)
+    throw new EvalError("Vincenty formula failed to converge"); // not possible?
+
+  const x = sinU1 * sinσ - cosU1 * cosσ * cosBearing;
+  const lat2 = Math.atan2(
+    sinU1 * cosσ + cosU1 * sinσ * cosBearing,
+    (1 - f) * Math.sqrt(sinα * sinα + x * x)
+  );
+  const λ = Math.atan2(
+    sinσ * sinBearing,
+    cosU1 * cosσ - sinU1 * sinσ * cosBearing
+  );
+  const C = (f / 16) * cosSqα * (4 + f * (4 - 3 * cosSqα));
+  const L =
+    λ -
+    (1 - C) *
+      f *
+      sinα *
+      (σ + C * sinσ * (cos2σₘ + C * cosσ * (-1 + 2 * cos2σₘ * cos2σₘ)));
+  const lon2 = lon1 + L;
+
+  const α2 = Math.atan2(sinα, -x);
+
+  return {
+    lat: lat2.toDeg(),
+    lon: lon2.toDeg(),
+  };
+};
+
+module.exports = { getDestinationPoint };
 
 
 /***/ }),
@@ -962,8 +1039,8 @@ __webpack_require__(/*! ../utils/prototypes */ "./src/utils/prototypes.js");
  * @param {number} bearing - direction traveled in radians
  * */
 const getDestinationPoint = ({ point, distance, bearing }) => {
-  const lat1 = point.lat,
-    lon1 = point.lon;
+  const lat1 = point.lat;
+  const lon1 = point.lon;
 
   return {
     lat: Math.asin(
@@ -983,17 +1060,6 @@ const getDestinationPoint = ({ point, distance, bearing }) => {
 };
 
 module.exports = { getDestinationPoint };
-
-
-/***/ }),
-
-/***/ "./src/surface/surface_vicenty.js":
-/*!****************************************!*\
-  !*** ./src/surface/surface_vicenty.js ***!
-  \****************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
 
 
 /***/ }),
@@ -1091,15 +1157,12 @@ module.exports = { getMinMaxAvgFromArray, getBoundsOfData };
  * compose
  *
  * Composition utility to compose multiple functions with arrays of parameters
+ *
+ * Thank you Eric Elliot for the great one-liners!
+ * https://medium.com/javascript-scene/reduce-composing-software-fe22f0c39a1d
  */
 
-/*
- const compose = (...fns) => (...args) =>
-  fns.reduceRight((acc, fn) => [fn(...args)], args);*/
-
-const compose = (...fns) => (args) =>
-  fns.reduceRight((acc, fn) => fn(acc), args);
-
+const compose = (...fns) => (x) => fns.reduceRight((v, f) => f(v), x);
 const pipe = (...fns) => (x) => fns.reduce((v, f) => f(v), x);
 
 module.exports = { compose, pipe };
@@ -1144,7 +1207,6 @@ const formatPoint = (formatType) => {
   switch (formatType) {
     case "DMS":
       return (point) => {
-        console.log("trigger", point);
         return {
           lat: point.lat.toDMSLat(),
           lon: point.lon.toDMSLon(),

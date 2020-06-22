@@ -1,4 +1,5 @@
 button {
+  position: relative;
   min-width: 100px;
   max-height: 50px;
   margin: 10px;
@@ -16,5 +17,10 @@ button {
   &:active {
     transform: scale(0.98, 0.98);
     box-shadow: $box-shadow-1dp;
+  }
+
+  &:hover {
+    color: $background;
+    background-color: $item-dark___hover;
   }
 }
