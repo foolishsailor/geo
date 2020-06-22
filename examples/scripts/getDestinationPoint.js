@@ -5,34 +5,38 @@ const getDestinationPoint = (() => {
 
   const getDestinationPoint = (e) => {
     e.preventDefault();
+
+    const setElem = (elem) => {
+      return document.querySelector(`input[name=${elem}]`);
+    };
+
     const origin = {
-      lat: document.querySelector("input[name=gpbd_origin_lat]"),
-      lon: document.querySelector("input[name=gpbd_origin_lon]"),
+      lat: setElem("gdp_origin_lat"),
+      lon: setElem("gdp_origin_lon"),
     };
 
     const destination = {
-      lat: document.querySelector("input[name=gpbd_destination_lat]"),
-      lon: document.querySelector("input[name=gpbd_destination_lon]"),
+      lat: setElem("gdp_dest_lat"),
+      lon: setElem("gdp_dest_lon"),
     };
 
-    const bearing = document.querySelector("input[name=gpbd_bearing]");
-    const distance = document.querySelector("input[name=gpbd_distance");
+    const bearing = setElem("gdp_bearing");
+    const distance = setElem("gdp_distance");
 
     const point = {
       lat: geo.parseDMS(origin.lat.value),
       lon: geo.parseDMS(origin.lon.value),
     };
 
-    const destinationPoint = geo.getDestinationPoint({
-      point: point,
+    const destPoint = geo.getDestinationPoint({
+      point,
       distance: distance.value,
       bearing: Number(bearing.value),
+      formatType: "Cardinal",
     });
 
-    console.log("destination", destinationPoint);
-
-    destination.lat.value = destinationPoint.lat;
-    destination.lon.value = destinationPoint.lon;
+    destination.lat.value = destPoint.lat;
+    destination.lon.value = destPoint.lon;
   };
 
   return {

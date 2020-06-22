@@ -1,0 +1,13 @@
+#radios { position: relative; background-color: tomato; z-index: 5; width: 363px; }
+
+input { display: none; }
+
+#bckgrnd, .labels { width: 120px; height: 30px; text-align: center; display: inline-block; padding-top: 10px; margin-right: -3px; z-index: 2; cursor: pointer; outline: 1px solid green; }
+
+#bckgrnd { background-color: orange; position: absolute; left: 0; top: 0; z-index: -1; }
+
+#rad1:checked ~ #bckgrnd { -webkit-transform: translateX(0); transform: translateX(0); -webkit-transition: -webkit-transform 0.5s ease-in-out; transition: -webkit-transform 0.5s ease-in-out; transition: transform 0.5s ease-in-out; transition: transform 0.5s ease-in-out, -webkit-transform 0.5s ease-in-out; }
+
+#rad2:checked ~ #bckgrnd { -webkit-transform: translateX(120px); transform: translateX(120px); -webkit-transition: -webkit-transform 0.5s ease-in-out; transition: -webkit-transform 0.5s ease-in-out; transition: transform 0.5s ease-in-out; transition: transform 0.5s ease-in-out, -webkit-transform 0.5s ease-in-out; }
+
+#rad3:checked ~ #bckgrnd { -webkit-transform: translateX(241px); transform: translateX(241px); -webkit-transition: -webkit-transform 0.5s ease-in-out; transition: -webkit-transform 0.5s ease-in-out; transition: transform 0.5s ease-in-out; transition: transform 0.5s ease-in-out, -webkit-transform 0.5s ease-in-out; }

@@ -17,11 +17,11 @@ describe("Number extension", () => {
   it("toDMS() | Converts decimal format GPS to human readable DMS format", () => {
     expect(defaults.decimalLat.toDMS()).toEqual("053°07'57.9\"");
   });
-  it("toLat() | Converts decimal format GPS to LAT human readable DMS format", () => {
-    expect(defaults.decimalLat.toLat()).toEqual("53°07'57.9\"N");
+  it("toDMSLat() | Converts decimal format GPS to LAT human readable DMS format", () => {
+    expect(defaults.decimalLat.toDMSLat()).toEqual("53°07'57.9\"N");
   });
-  it("toLon() | Converts decimal format GPS to LON human readable DMS format", () => {
-    expect(defaults.decimalLon.toLon()).toEqual("006°05'32.89\"W");
+  it("toDMSLon() | Converts decimal format GPS to LON human readable DMS format", () => {
+    expect(defaults.decimalLon.toDMSLon()).toEqual("006°05'32.89\"W");
   });
 });
 

@@ -43,10 +43,17 @@
   }
 }
 
-.input---block {
-  width: 100%;
+.input_group---notInteractive {
+  input {
+    pointer-events: none;
+    background-color: $background-light;
+  }
+
+  label {
+    color: $text-light;
+  }
 }
 
-.input---notInteractive {
-  pointer-events: none;
+.input---block {
+  width: 100%;
 }

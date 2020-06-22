@@ -30,7 +30,7 @@ const getDestinationPoint = ({
   const process = pipe(
     measurement, //get measurment unit user choose and apply values
     surface(surfaceType).getDestinationPoint, //apply chosen surface type formula
-    formatPoint //apply chosen format
+    formatPoint(formatType) //apply chosen format
   );
 
   return process({

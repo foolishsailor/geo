@@ -1,6 +1,6 @@
 :root {
   --background: hsl(230, 17%, 14%);
-  --background-pattern: hsl(232, 19%, 15%);
+  --background-light: hsl(228, 29%, 24%);
   --background-card: hsl(228, 28%, 20%);
   --background-card___hover: hsl(228, 28%, 28%);
   --text-dark: hsl(228, 34%, 66%);
@@ -16,7 +16,7 @@ $instagram: linear-gradient(0.25turn, hsl(37, 97%, 70%), hsl(329, 70%, 58%));
 $youTube: hsl(348, 97%, 39%);
 
 $background: var(--background);
-$background-pattern: var(--background-pattern);
+$background-light: var(--background-light);
 $background-card: var(--background-card);
 $background-card___hover: var(--background-card___hover);
 $text-dark: var(--text-dark);

@@ -37,14 +37,24 @@ Number.prototype.toDMS = function () {
   return `${deg}\u00B0${min}\u0027${sec}\u0022`;
 };
 
-Number.prototype.toLat = function () {
+Number.prototype.toDMSLat = function () {
   // convert numeric degrees to deg/min/sec latitude
-  return this.toDMS().slice(1) + (this < 0 ? "S" : "N"); // knock off initial '0' for lat
+  return this.toDMS().slice(1) + (this > 0 ? "N" : "S"); // knock off initial '0' for lat
 };
 
-Number.prototype.toLon = function () {
+Number.prototype.toDMSLon = function () {
   // convert numeric degrees to deg/min/sec longitude
   return this.toDMS() + (this > 0 ? "E" : "W");
+};
+
+Number.prototype.toDLat = function () {
+  // convert numeric degrees to deg/min/sec latitude
+  return `${Math.abs(this)}\u00B0${this > 0 ? "N" : "S"}`;
+};
+
+Number.prototype.toDLon = function () {
+  // convert numeric degrees to deg/min/sec longitude
+  return `${Math.abs(this)}\u00B0${this > 0 ? "E" : "W"}`;
 };
 
 Number.prototype.metersToKm = function () {

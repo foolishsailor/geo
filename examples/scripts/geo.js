@@ -798,7 +798,7 @@ module.exports = parseDMS;
 
 __webpack_require__(/*! ./utils/prototypes */ "./src/utils/prototypes.js");
 const geo_const = __webpack_require__(/*! ./utils/const */ "./src/utils/const.js");
-const surface_spherical = __webpack_require__(/*! ./surface/surface_spherical */ "./src/surface/surface_spherical.js");
+const surface = __webpack_require__(/*! ./surface */ "./src/surface/index.js");
 const measurement = __webpack_require__(/*! ./utils/measurement */ "./src/utils/measurement.js");
 const formatPoint = __webpack_require__(/*! ./utils/formatPoint */ "./src/utils/formatPoint.js");
 const { pipe } = __webpack_require__(/*! ./utils/compose */ "./src/utils/compose.js");
@@ -817,15 +817,28 @@ const { pipe } = __webpack_require__(/*! ./utils/compose */ "./src/utils/compose
  *  @param {number} lat
  *  @param {number} lon
  */
-const getDestinationPoint = ({ point, bearing, ...rest }) => {
-  return {
+const getDestinationPoint = ({
+  point,
+  bearing,
+  surfaceType = "spherical",
+  formatType = "DMS",
+  ...rest
+}) => {
+  //Composition approach
+  const process = pipe(
+    measurement, //get measurment unit user choose and apply values
+    surface(surfaceType).getDestinationPoint, //apply chosen surface type formula
+    formatPoint(formatType) //apply chosen format
+  );
+
+  return process({
     point: {
       lat: point.lat.toRad(),
       lon: point.lon.toRad(),
     },
     bearing: Number(bearing).toRad(),
     ...rest,
-  };
+  });
 };
 
 /**
@@ -884,15 +897,46 @@ const mercator = ({ latitude, longitude }) => {
 
 module.exports = {
   getIntersectionPoint,
-  getDestinationPoint: pipe(
-    measurement, //get measurment unit user choose and apply values
-    getDestinationPoint, //prepare user data to entry into formula
-    surface_spherical.getDestinationPoint, //apply chosen formula
-    formatPoint //apply chosen format
-  ),
+  getDestinationPoint,
 
   mercator,
 };
+
+
+/***/ }),
+
+/***/ "./src/surface/index.js":
+/*!******************************!*\
+  !*** ./src/surface/index.js ***!
+  \******************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+const spherical = __webpack_require__(/*! ./surface_spherical */ "./src/surface/surface_spherical.js");
+const ellipsoidal = __webpack_require__(/*! ./surface_ellipsoidal */ "./src/surface/surface_ellipsoidal.js");
+const vicenty = __webpack_require__(/*! ./surface_vicenty */ "./src/surface/surface_vicenty.js");
+
+module.exports = (surfaceType) => {
+  switch (surfaceType) {
+    case "vicenty":
+      return vicenty;
+    case "ellipsoidal":
+      return ellipsoidal;
+    default:
+      return spherical;
+  }
+};
+
+
+/***/ }),
+
+/***/ "./src/surface/surface_ellipsoidal.js":
+/*!********************************************!*\
+  !*** ./src/surface/surface_ellipsoidal.js ***!
+  \********************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
 
 
 /***/ }),
@@ -939,6 +983,17 @@ const getDestinationPoint = ({ point, distance, bearing }) => {
 };
 
 module.exports = { getDestinationPoint };
+
+
+/***/ }),
+
+/***/ "./src/surface/surface_vicenty.js":
+/*!****************************************!*\
+  !*** ./src/surface/surface_vicenty.js ***!
+  \****************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
 
 
 /***/ }),
@@ -1085,8 +1140,27 @@ module.exports = {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-const formatPoint = (point) => {
-  return { lat: point.lat.toLat(), lon: point.lon.toLon() };
+const formatPoint = (formatType) => {
+  switch (formatType) {
+    case "DMS":
+      return (point) => {
+        console.log("trigger", point);
+        return {
+          lat: point.lat.toDMSLat(),
+          lon: point.lon.toDMSLon(),
+        };
+      };
+    case "Cardinal":
+      return (point) => ({
+        lat: point.lat.toFixedNumber(4).toDLat(),
+        lon: point.lon.toFixedNumber(4).toDLon(),
+      });
+    case "Decimal":
+      return (point) => ({
+        lat: point.lat.toFixedNumber(4),
+        lon: point.lon.toFixedNumber(4),
+      });
+  }
 };
 
 module.exports = formatPoint;
@@ -1183,14 +1257,24 @@ Number.prototype.toDMS = function () {
   return `${deg}\u00B0${min}\u0027${sec}\u0022`;
 };
 
-Number.prototype.toLat = function () {
+Number.prototype.toDMSLat = function () {
   // convert numeric degrees to deg/min/sec latitude
-  return this.toDMS().slice(1) + (this < 0 ? "S" : "N"); // knock off initial '0' for lat
+  return this.toDMS().slice(1) + (this > 0 ? "N" : "S"); // knock off initial '0' for lat
 };
 
-Number.prototype.toLon = function () {
+Number.prototype.toDMSLon = function () {
   // convert numeric degrees to deg/min/sec longitude
   return this.toDMS() + (this > 0 ? "E" : "W");
+};
+
+Number.prototype.toDLat = function () {
+  // convert numeric degrees to deg/min/sec latitude
+  return `${Math.abs(this)}\u00B0${this > 0 ? "N" : "S"}`;
+};
+
+Number.prototype.toDLon = function () {
+  // convert numeric degrees to deg/min/sec longitude
+  return `${Math.abs(this)}\u00B0${this > 0 ? "E" : "W"}`;
 };
 
 Number.prototype.metersToKm = function () {

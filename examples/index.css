@@ -107,7 +107,7 @@ template { display: none; }
 /** Add the correct display in IE 10. */
 [hidden] { display: none; }
 
-:root { --background: hsl(230, 17%, 14%); --background-pattern: hsl(232, 19%, 15%); --background-card: hsl(228, 28%, 20%); --background-card___hover: hsl(228, 28%, 28%); --text-dark: hsl(228, 34%, 66%); --text-light: hsl(0, 0%, 100%); }
+:root { --background: hsl(230, 17%, 14%); --background-light: hsl(228, 29%, 24%); --background-card: hsl(228, 28%, 20%); --background-card___hover: hsl(228, 28%, 28%); --text-dark: hsl(228, 34%, 66%); --text-light: hsl(0, 0%, 100%); }
 
 :root { font-size: 14px; }
 
@@ -153,9 +153,15 @@ img { vertical-align: middle; }
 
 .card:hover { background-color: var(--background-card___hover); }
 
+.card script { display: block; text-align: left; font-family: monospace; white-space: pre; }
+
 .card__header { text-align: left; padding-bottom: 2em; }
 
 .card__body { display: -webkit-box; display: -ms-flexbox; display: flex; -webkit-box-orient: vertical; -webkit-box-direction: normal; -ms-flex-direction: column; flex-direction: column; -webkit-box-flex: 1; -ms-flex: 1; flex: 1; }
+
+.card__body-container { padding: 10px; -webkit-box-flex: 1; -ms-flex: 1; flex: 1; }
+
+.card__body-header { color: var(--text-dark); text-align: left; font-size: 1.2rem; }
 
 .card__body-text { text-align: left; margin-bottom: 5px; }
 
@@ -201,11 +207,24 @@ img { vertical-align: middle; }
 
 .input_group .input---error { display: block; color: red; }
 
-.input---block { width: 100%; }
+.input_group---notInteractive input { pointer-events: none; background-color: var(--background-light); }
 
-.input---notInteractive { pointer-events: none; }
+.input_group---notInteractive label { color: var(--text-light); }
+
+.input---block { width: 100%; }
 
 button { min-width: 100px; max-height: 50px; margin: 10px; padding: 10px; border: none; border-radius: 100px; font-size: 1.6rem; color: var(--text-light); outline: none; font-weight: 700; background-color: var(--text-dark); -webkit-box-shadow: 0px 2px 4px -1px rgba(0, 0, 0, 0.2), 0px 4px 5px 0px rgba(0, 0, 0, 0.14), 0px 1px 10px 0px rgba(0, 0, 0, 0.12); box-shadow: 0px 2px 4px -1px rgba(0, 0, 0, 0.2), 0px 4px 5px 0px rgba(0, 0, 0, 0.14), 0px 1px 10px 0px rgba(0, 0, 0, 0.12); -webkit-transition: 100ms ease-in-out; transition: 100ms ease-in-out; }
 
 button:active { -webkit-transform: scale(0.98, 0.98); transform: scale(0.98, 0.98); -webkit-box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.2), 0px 1px 1px 0px rgba(0, 0, 0, 0.14), 0px 2px 1px -1px rgba(0, 0, 0, 0.12); box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.2), 0px 1px 1px 0px rgba(0, 0, 0, 0.14), 0px 2px 1px -1px rgba(0, 0, 0, 0.12); }
-/*# sourceMappingURL=index.css.map */
+
+.segmented_control { position: relative; margin: 10px 0; width: 100%; }
+
+.segmented_control input { display: none; }
+
+.segmented_control label { display: inline-block; width: 33%; height: 20px; padding-top: 10px; border: 1px solid white; text-align: center; font-size: 0.8rem; cursor: pointer; }
+
+.segmented_control label:first-of-type { border-radius: 30px 0 0 30px; border-right: none; }
+
+.segmented_control label:last-of-type { border-radius: 0 30px 30px 0; border-left: none; }
+
+.segmented_control input[type="radio"]:checked + label { background: #fff; color: #333; }

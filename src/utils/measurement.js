@@ -1,7 +1,6 @@
 const geo_const = require("./const");
 
 const measurement = ({ distance, ...rest }) => {
-  console.log("distance", distance);
   let divisor;
 
   switch (true) {
