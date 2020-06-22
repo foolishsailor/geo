@@ -17,7 +17,7 @@ const getDestinationPoint = ({ point, distance, bearing }) => {
     λ1 = point.lon,
     { a, b, f } = { a: 6378137, b: 6356752.314245, f: 1 / 298.257223563 },
     α1 = bearing,
-    s = distance;
+    s = parseFloat(distance);
 
   const sinα1 = Math.sin(α1);
   const cosα1 = Math.cos(α1);
