@@ -9,8 +9,7 @@
 .card {
   $border: 10px;
   position: relative;
-  display: flex;
-  flex-direction: column;
+  flex-wrap: wrap
   flex: 1;
   flex-wrap: wrap;
   box-sizing: border-box;
