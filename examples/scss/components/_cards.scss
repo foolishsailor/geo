@@ -21,6 +21,10 @@
   background-color: $background-card;
   transition: 0.2s ease-in-out;
 
+  @media (max-width: 375px) {
+    margin: 15px 0;
+  }
+
   &:hover {
     background-color: $background-card___hover;
   }
@@ -36,14 +40,14 @@
     white-space: pre;
 
     @media all and (max-width: 1000px) {
-      white-space: pre-wrap;
+      white-space: pre-line;
     }
   }
 }
 
 .card__header {
   text-align: left;
-  padding-bottom: 2em;
+  padding-bottom: 0.2rem;
 }
 
 .card__body {
@@ -61,6 +65,10 @@
 
   .body-container__item {
     margin-bottom: 10px;
+  }
+
+  @media (max-width: 375px) {
+    margin: 10px 0;
   }
 }
 

@@ -4,6 +4,18 @@
   <p class="header__description">
     Use origin point, bearing and distance to calculate new position
   </p>
+  <ul>
+    <li class="card__body-text">
+      Spherical and Ellipsoidal surface models. Spherical is less accurate but
+      is also less processor intensive.
+    </li>
+    <li class="card__body-text">
+      DMS, Cadinal and Decimal formats for input/output
+    </li>
+    <li class="card__body-text">
+      Nautical Mile, Mile, Kilometer, and Meter inputs for distance
+    </li>
+  </ul>
 </div>
 <div class="card__body card__body___horizontal">
   <div class="card__body-container">
@@ -14,10 +26,7 @@
       <p class="card__body-text">
         Surface Model
       </p>
-      <p class="card__body-text">
-        Type of formula to use. Spherical is less accurate but also less
-        processor intensive.
-      </p>
+
       <div id="gdp_surfaceModel" class="segmented_control"></div>
     </div>
     <div class="body-container__item">
@@ -109,6 +118,8 @@
     </p>
     <script type="text/html">
       const point = geo.parseDMS(origin);
+
+      // { lat: 34.3321, lon: -6.0234 }
     </script>
     <p class="card__body-text">
       Point must be in Decimal - Ex: 34.2334
@@ -122,6 +133,8 @@
         distance,
         bearing
       });
+
+      // { lat: 38.9621, lon: 110.2392 }
     </script>
   </div>
 </div>

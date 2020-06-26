@@ -4,10 +4,6 @@ const {
   mercator,
 } = require("../src/position");
 
-const measurement = require("../src/utils/measurement");
-const { pipe } = require("../src/utils/compose");
-const surface_spherical = require("../src/surface/surface_spherical");
-
 require("../src/utils/prototypes");
 
 const test_defaults = require("./test_defaults");
@@ -35,6 +31,7 @@ describe("getDestinationPoint()", () => {
       })
     ).toEqual(expect.objectContaining({ lat: "51.5136°N", lon: "0.0981°W" }));
   });
+
   it("should show Decimal", () => {
     expect(
       getDestinationPoint({
@@ -55,6 +52,6 @@ describe("getDestinationPoint()", () => {
         formatType: "Decimal",
         surfaceType: "Ellipsoidal",
       })
-    ).toEqual(expect.objectContaining({ lat: 58.64402, lon: -3.07009 }));
+    ).toEqual(expect.objectContaining({ lat: 58.644, lon: -3.0701 }));
   });
 });

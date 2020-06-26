@@ -7,5 +7,159 @@
     are not required to overlap to calculate
   </p>
 </div>
-<div class="card__body card__body___horizontal"></div>
+<div class="card__body card__body___horizontal">
+  <div class="card__body-container">
+    <h5 class="card__body-header">
+      Options
+    </h5>
+    <div class="body-container__item">
+      <p class="card__body-text">
+        Surface Model
+      </p>
+
+      <div id="gip_surfaceModel" class="segmented_control"></div>
+    </div>
+    <div class="body-container__item">
+      <p class="card__body-text">
+        Output Format
+      </p>
+
+      <div id="gip_outputFormat" class="segmented_control"></div>
+    </div>
+
+    <button id="getDestination">
+      Go!
+    </button>
+  </div>
+  <div class="card__body-container">
+    <h5 class="card__body-header">
+      Input and Result
+    </h5>
+    <div class="body-container__item">
+      <p class="card__body-text">
+        Track 1
+      </p>
+      <p class="card__body-text">
+        Origin
+      </p>
+      <div class="input_group">
+        <label for="gip_origin_lat">Lat</label>
+        <input
+          type="text"
+          class="input---block"
+          name="gip_origin_lat"
+          value="51.47788"
+        />
+      </div>
+      <div class="input_group">
+        <label for="gip_origin_lat">Lat</label>
+        <input
+          type="text"
+          class="input---block"
+          name="gip_origin_lat"
+          value="51.47788"
+        />
+      </div>
+    </div>
+    <div class="body-container__item">
+      <p class="card__body-text">
+        Destination
+      </p>
+      <div class="input_group">
+        <label for="gip_origin_lat">Lat</label>
+        <input
+          type="text"
+          class="input---block"
+          name="gip_origin_lat"
+          value="51.47788"
+        />
+      </div>
+      <div class="input_group">
+        <label for="gip_origin_lat">Lat</label>
+        <input
+          type="text"
+          class="input---block"
+          name="gip_origin_lat"
+          value="51.47788"
+        />
+      </div>
+    </div>
+
+    <div class="body-container__item">
+      <p class="card__body-text">
+        Track 2
+      </p>
+      <p class="card__body-text">
+        Origin
+      </p>
+      <div class="input_group">
+        <label for="gip_origin_lat">Lat</label>
+        <input
+          type="text"
+          class="input---block"
+          name="gip_origin_lat"
+          value="51.47788"
+        />
+      </div>
+      <div class="input_group">
+        <label for="gip_origin_lat">Lat</label>
+        <input
+          type="text"
+          class="input---block"
+          name="gip_origin_lat"
+          value="51.47788"
+        />
+      </div>
+    </div>
+    <div class="body-container__item">
+      <p class="card__body-text">
+        Destination
+      </p>
+      <div class="input_group">
+        <label for="gip_origin_lat">Lat</label>
+        <input
+          type="text"
+          class="input---block"
+          name="gip_origin_lat"
+          value="51.47788"
+        />
+      </div>
+      <div class="input_group">
+        <label for="gip_origin_lat">Lat</label>
+        <input
+          type="text"
+          class="input---block"
+          name="gip_origin_lat"
+          value="51.47788"
+        />
+      </div>
+    </div>
+  </div>
+  <div class="card__body-container">
+    <h5 class="card__body-header">
+      Simple Implementation
+    </h5>
+    <p class="card__body-text">
+      Process wide range of gps position formats into a decimal format. Accepts
+      Object, Array or String.
+    </p>
+    <script type="text/html">
+      const point = geo.parseDMS(origin);
+    </script>
+    <p class="card__body-text">
+      Point must be in Decimal - Ex: 34.2334
+    </p>
+    <p class="card__body-text">
+      Distance requires type [Km , M, NM, m] - Ex: 4,234Km
+    </p>
+    <script type="text/html">
+      const destPoint = geo.getIntersectionPoint = ({
+        trackA,
+        trackB,
+        surfaceType = "Spherical",
+        formatType = "DMS",
+      })
+    </script>
+  </div>
+</div>
 <div class="card__footer">More Info</div>

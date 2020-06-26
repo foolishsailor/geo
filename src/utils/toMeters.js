@@ -1,32 +1,24 @@
 const geo_const = require("./const");
 
 const measurement = (distanceString) => {
-  let divisor;
+  const distance = parseFloat(distanceString);
 
   switch (true) {
     case /(NM)/i.test(distanceString): //nautical miles
-      divisor = geo_const.MEAN_RADIUS_IN_M * geo_const.METER_TO_NM;
-      break;
+      return distance / geo_const.METER_TO_NM;
 
     case /(KM)/i.test(distanceString): //Kilometers
-      divisor = geo_const.MEAN_RADIUS_IN_M * geo_const.METER_TO_KM;
-      break;
+      return distance / geo_const.METER_TO_KM;
 
     case /(M)/.test(distanceString): //Miles
-      divisor = geo_const.MEAN_RADIUS_IN_M * geo_const.METER_TO_MILE;
-      break;
+      return distance / geo_const.METER_TO_MILE;
 
     case /(m)/.test(distanceString): //meters
-      divisor = geo_const.MEAN_RADIUS_IN_M;
-      break;
+      return distance;
 
     default:
       throw "No Measurement found";
   }
-
-  const distance = parseFloat(distanceString) / divisor;
-
-  return distance;
 };
 
 module.exports = measurement;

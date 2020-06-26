@@ -39,8 +39,9 @@ require("../utils/prototypes");
 const parseDMS = (data, options = {}) => {
   if (data == null) return null;
   //Check if string
-  if (typeof data === "string" || typeof data === "number")
-    return processDMS(data, options);
+  if (typeof data === "string") return processDMS(data, options);
+
+  if (typeof data === "number") return processDMS(data, options);
 
   //Check if Array and recursively process
   if (Array.isArray(data))

@@ -1,7 +1,6 @@
 require("./utils/prototypes");
 const geo_const = require("./utils/const");
 const surface = require("./surface");
-const measurement = require("./utils/measurement");
 const formatPoint = require("./utils/formatPoint");
 const { pipe } = require("./utils/compose");
 
@@ -46,11 +45,11 @@ const getDestinationPoint = ({
 
     Calculate intersection point between two lines/routes in lat and lon.  They are not required to overlap to calculate
    
-      @property {object} lineA
+      @property {object} trackA
         @property {number} lat
         @property {number} lon
 
-      @property {object} lineB
+      @property {object} trackB
         @property {number} lat
         @property {number} lon
 
@@ -60,21 +59,28 @@ const getDestinationPoint = ({
       @property {number} lon
 
   */
-const getIntersectionPoint = ({ lineA, lineB }) => {
-  let XAsum = lineA.start.lon - lineA.end.lon;
-  let XBsum = lineB.start.lon - lineB.end.lon;
-  let YAsum = lineA.start.lat - lineA.end.lat;
-  let YBsum = lineB.start.lat - lineB.end.lat;
+const getIntersectionPoint = ({
+  trackA,
+  trackB,
+  surfaceType = "Spherical",
+  formatType = "DMS",
+  ...rest
+}) => {
+  const XAsum = trackA.start.lon - trackA.end.lon,
+    XBsum = trackB.start.lon - trackB.end.lon,
+    YAsum = trackA.start.lat - trackA.end.lat,
+    YBsum = trackB.start.lat - trackB.end.lat,
+    lineDenominator = XAsum * YBsum - YAsum * XBsum;
 
-  let lineDenominator = XAsum * YBsum - YAsum * XBsum;
   if (lineDenominator == 0.0) return false;
 
-  let a =
-    lineA.start.lon * lineA.end.lat - arrs.lineA.start.lat * lineA.end.lon;
-  let b = lineB.start.lon * lineB.end.lat - lineB.start.lat * lineB.end.lon;
+  const a =
+    trackA.start.lon * trackA.end.lat - arrs.trackA.start.lat * trackA.end.lon;
+  const b =
+    trackB.start.lon * trackB.end.lat - trackB.start.lat * trackB.end.lon;
 
-  let lat = (a * YBsum - b * YAsum) / lineDenominator;
-  let lon = (a * XBsum - b * XAsum) / lineDenominator;
+  const lat = (a * YBsum - b * YAsum) / lineDenominator;
+  const lon = (a * XBsum - b * XAsum) / lineDenominator;
 
   return { lat, lon };
 };

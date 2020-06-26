@@ -1,4 +1,5 @@
-const measurement = require("../utils/measurement");
+const toMeters = require("../utils/toMeters");
+const geo_const = require("../utils/const");
 require("../utils/prototypes");
 
 /**
@@ -17,7 +18,7 @@ const getDestinationPoint = ({ point, distance, bearing }) => {
   const lat1 = point.lat;
   const lon1 = point.lon;
 
-  distance = measurement(distance);
+  distance = toMeters(distance) / geo_const.MEAN_RADIUS_IN_M;
 
   return {
     lat: Math.asin(

@@ -12,7 +12,6 @@ require("../utils/prototypes");
  * @param {number} bearing - direction traveled in radians
  * */
 const getDestinationPoint = ({ point, distance, bearing }) => {
-  console.log("Trigger This", point, distance, bearing);
   const φ1 = point.lat,
     λ1 = point.lon,
     { a, b, f } = { a: 6378137, b: 6356752.314245, f: 1 / 298.257223563 },

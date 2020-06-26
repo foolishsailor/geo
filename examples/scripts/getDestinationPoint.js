@@ -55,7 +55,7 @@ const getDestinationPoint = (() => {
     destination.lon.value = destPoint.lon;
   };
 
-  const init = () => {
+  const init = (() => {
     const gdp_outputFormat_items = ["Decimal", "Cardinal", "DMS"];
     segmentedControl("gdp_outputFormat", gdp_outputFormat_items);
 
@@ -69,9 +69,7 @@ const getDestinationPoint = (() => {
     ].forEach((item) =>
       document.getElementById(item[0]).addEventListener("click", item[1])
     );
-  };
-
-  init();
+  })();
 
   return {
     clearInputError,

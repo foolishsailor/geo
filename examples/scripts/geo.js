@@ -799,7 +799,6 @@ module.exports = parseDMS;
 __webpack_require__(/*! ./utils/prototypes */ "./src/utils/prototypes.js");
 const geo_const = __webpack_require__(/*! ./utils/const */ "./src/utils/const.js");
 const surface = __webpack_require__(/*! ./surface */ "./src/surface/index.js");
-const measurement = __webpack_require__(/*! ./utils/measurement */ "./src/utils/measurement.js");
 const formatPoint = __webpack_require__(/*! ./utils/formatPoint */ "./src/utils/formatPoint.js");
 const { pipe } = __webpack_require__(/*! ./utils/compose */ "./src/utils/compose.js");
 
@@ -827,7 +826,6 @@ const getDestinationPoint = ({
   //Composition approach
 
   return pipe(
-    measurement, //get measurment unit user choose and apply values
     surface(surfaceType).getDestinationPoint, //apply chosen surface type formula
     formatPoint(formatType) //apply chosen format
   )({
@@ -943,23 +941,26 @@ __webpack_require__(/*! ../utils/prototypes */ "./src/utils/prototypes.js");
  * @param {number} bearing - direction traveled in radians
  * */
 const getDestinationPoint = ({ point, distance, bearing }) => {
-  console.log("Trigger This");
-  const lat1 = point.lat,
-    lon1 = point.lon,
+  const φ1 = point.lat,
+    λ1 = point.lon,
     { a, b, f } = { a: 6378137, b: 6356752.314245, f: 1 / 298.257223563 },
-    sinBearing = Math.sin(bearing),
-    cosBearing = Math.cos(bearing),
-    tanU1 = (1 - f) * Math.tan(lat1),
-    cosU1 = 1 / Math.sqrt(1 + tanU1 * tanU1),
-    sinU1 = tanU1 * cosU1,
-    σ1 = Math.atan2(tanU1, cosBearing), // σ1 = angular distance on the sphere from the equator to P1
-    sinα = cosU1 * sinBearing, // α = azimuth of the geodesic at the equator
-    cosSqα = 1 - sinα * sinα,
-    uSq = (cosSqα * (a * a - b * b)) / (b * b),
-    A = 1 + (uSq / 16384) * (4096 + uSq * (-768 + uSq * (320 - 175 * uSq))),
-    B = (uSq / 1024) * (256 + uSq * (-128 + uSq * (74 - 47 * uSq)));
+    α1 = bearing,
+    s = parseFloat(distance);
 
-  let σ = distance / (b * A),
+  const sinα1 = Math.sin(α1);
+  const cosα1 = Math.cos(α1);
+
+  const tanU1 = (1 - f) * Math.tan(φ1),
+    cosU1 = 1 / Math.sqrt(1 + tanU1 * tanU1),
+    sinU1 = tanU1 * cosU1;
+  const σ1 = Math.atan2(tanU1, cosα1); // σ1 = angular distance on the sphere from the equator to P1
+  const sinα = cosU1 * sinα1; // α = azimuth of the geodesic at the equator
+  const cosSqα = 1 - sinα * sinα;
+  const uSq = (cosSqα * (a * a - b * b)) / (b * b);
+  const A = 1 + (uSq / 16384) * (4096 + uSq * (-768 + uSq * (320 - 175 * uSq)));
+  const B = (uSq / 1024) * (256 + uSq * (-128 + uSq * (74 - 47 * uSq)));
+
+  let σ = s / (b * A),
     sinσ = null,
     cosσ = null,
     Δσ = null; // σ = angular distance P₁ P₂ on the sphere
@@ -982,20 +983,17 @@ const getDestinationPoint = ({ point, distance, bearing }) => {
               (-3 + 4 * sinσ * sinσ) *
               (-3 + 4 * cos2σₘ * cos2σₘ)));
     σʹ = σ;
-    σ = distance / (b * A) + Δσ;
+    σ = s / (b * A) + Δσ;
   } while (Math.abs(σ - σʹ) > 1e-12 && ++iterations < 100);
   if (iterations >= 100)
     throw new EvalError("Vincenty formula failed to converge"); // not possible?
 
-  const x = sinU1 * sinσ - cosU1 * cosσ * cosBearing;
-  const lat2 = Math.atan2(
-    sinU1 * cosσ + cosU1 * sinσ * cosBearing,
+  const x = sinU1 * sinσ - cosU1 * cosσ * cosα1;
+  const φ2 = Math.atan2(
+    sinU1 * cosσ + cosU1 * sinσ * cosα1,
     (1 - f) * Math.sqrt(sinα * sinα + x * x)
   );
-  const λ = Math.atan2(
-    sinσ * sinBearing,
-    cosU1 * cosσ - sinU1 * sinσ * cosBearing
-  );
+  const λ = Math.atan2(sinσ * sinα1, cosU1 * cosσ - sinU1 * sinσ * cosα1);
   const C = (f / 16) * cosSqα * (4 + f * (4 - 3 * cosSqα));
   const L =
     λ -
@@ -1003,13 +1001,13 @@ const getDestinationPoint = ({ point, distance, bearing }) => {
       f *
       sinα *
       (σ + C * sinσ * (cos2σₘ + C * cosσ * (-1 + 2 * cos2σₘ * cos2σₘ)));
-  const lon2 = lon1 + L;
+  const λ2 = λ1 + L;
 
   const α2 = Math.atan2(sinα, -x);
 
   return {
-    lat: lat2.toDeg(),
-    lon: lon2.toDeg(),
+    lat: φ2.toDeg(),
+    lon: λ2.toDeg(),
   };
 };
 
@@ -1025,7 +1023,10 @@ module.exports = { getDestinationPoint };
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
+const measurement = __webpack_require__(/*! ../utils/toMeters */ "./src/utils/toMeters.js");
+const geo_const = __webpack_require__(/*! ../utils/const */ "./src/utils/const.js");
 __webpack_require__(/*! ../utils/prototypes */ "./src/utils/prototypes.js");
+
 /**
  * Formula for calculations using simple trigonometry to calculate based on spherical surface model
  *
@@ -1041,6 +1042,10 @@ __webpack_require__(/*! ../utils/prototypes */ "./src/utils/prototypes.js");
 const getDestinationPoint = ({ point, distance, bearing }) => {
   const lat1 = point.lat;
   const lon1 = point.lon;
+
+  distance = measurement(distance) / geo_const.MEAN_RADIUS_IN_M;
+
+  console.log("distance", distance);
 
   return {
     lat: Math.asin(
@@ -1178,7 +1183,7 @@ module.exports = { compose, pipe };
 /***/ (function(module, exports) {
 
 module.exports = {
-  METER_TO_KM: 0.0001,
+  METER_TO_KM: 0.001,
   METER_TO_MILE: 0.000621371,
   METER_TO_NM: 1 / 1852,
 
@@ -1226,49 +1231,6 @@ const formatPoint = (formatType) => {
 };
 
 module.exports = formatPoint;
-
-
-/***/ }),
-
-/***/ "./src/utils/measurement.js":
-/*!**********************************!*\
-  !*** ./src/utils/measurement.js ***!
-  \**********************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-const geo_const = __webpack_require__(/*! ./const */ "./src/utils/const.js");
-
-const measurement = ({ distance, ...rest }) => {
-  let divisor;
-
-  switch (true) {
-    case /(NM)/i.test(distance): //nautical miles
-      divisor = geo_const.MEAN_RADIUS_IN_M * geo_const.METER_TO_NM;
-      break;
-
-    case /(KM)/i.test(distance): //Kilometers
-      divisor = geo_const.MEAN_RADIUS_IN_M * geo_const.METER_TO_KM;
-      break;
-
-    case /(M)/.test(distance): //Miles
-      divisor = geo_const.MEAN_RADIUS_IN_M * geo_const.METER_TO_MILE;
-      break;
-
-    case /(m)/.test(distance): //meters
-      divisor = geo_const.MEAN_RADIUS_IN_M;
-      break;
-
-    default:
-      throw "No Measurement found";
-  }
-
-  distance = parseFloat(distance) / divisor;
-
-  return { distance, ...rest };
-};
-
-module.exports = measurement;
 
 
 /***/ }),
@@ -1523,6 +1485,41 @@ const humanTime = (millisec) => {
 };
 
 module.exports = { humanTime };
+
+
+/***/ }),
+
+/***/ "./src/utils/toMeters.js":
+/*!*******************************!*\
+  !*** ./src/utils/toMeters.js ***!
+  \*******************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+const geo_const = __webpack_require__(/*! ./const */ "./src/utils/const.js");
+
+const measurement = (distanceString) => {
+  const distance = parseFloat(distanceString);
+
+  switch (true) {
+    case /(NM)/i.test(distanceString): //nautical miles
+      return distance / geo_const.METER_TO_NM;
+
+    case /(KM)/i.test(distanceString): //Kilometers
+      return distance / geo_const.METER_TO_KM;
+
+    case /(M)/.test(distanceString): //Miles
+      return distance / geo_const.METER_TO_MILE;
+
+    case /(m)/.test(distanceString): //meters
+      return distance;
+
+    default:
+      throw "No Measurement found";
+  }
+};
+
+module.exports = measurement;
 
 
 /***/ })

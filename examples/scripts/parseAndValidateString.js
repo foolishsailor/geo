@@ -20,10 +20,14 @@ const parseAndValidateString = (() => {
       decimalOutput.classList.add("input---error");
       decimalOutput.value = err;
     }
-
-    console.log("geo", stringInput, geo.parseDMS(stringInput));
-    console.log("trigger", e);
   };
+
+  const init = (() => {
+    document.getElementById("pvs_parseDMS").addEventListener("click", parseDMS);
+    document
+      .getElementById("pvs_dms_string")
+      .addEventListener("focus", clearInputError);
+  })();
 
   return {
     clearInputError,

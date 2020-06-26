@@ -117,7 +117,7 @@ a, h1, h2, h3, p { margin: 0; padding: 0; }
 
 body { font-family: "Raleway", serif; background-color: var(--background); color: var(--text-light); font-size: 1rem; font-weight: 400; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
 
-@media (max-width: 375px) { body { margin: 25px; } }
+@media (max-width: 375px) { body { margin: 15px; } }
 
 h1, h2, h3 { color: var(--text-dark); font-weight: 900; font-size: 29px; }
 
@@ -151,19 +151,23 @@ img { vertical-align: middle; }
 
 .card { position: relative; display: -webkit-box; display: -ms-flexbox; display: flex; -webkit-box-orient: vertical; -webkit-box-direction: normal; -ms-flex-direction: column; flex-direction: column; -webkit-box-flex: 1; -ms-flex: 1; flex: 1; -ms-flex-wrap: wrap; flex-wrap: wrap; -webkit-box-sizing: border-box; box-sizing: border-box; margin: 15px; padding: 30px 25px; text-align: center; border-radius: 10px; background-color: var(--background-card); -webkit-transition: 0.2s ease-in-out; transition: 0.2s ease-in-out; }
 
+@media (max-width: 375px) { .card { margin: 15px 0; } }
+
 .card:hover { background-color: var(--background-card___hover); }
 
 .card script { display: block; padding: 10px; margin: 10px; border-radius: 10px; background-color: rgba(0, 0, 0, 0.1); text-align: left; font-family: monospace; white-space: pre; }
 
-@media all and (max-width: 1000px) { .card script { white-space: pre-wrap; } }
+@media all and (max-width: 1000px) { .card script { white-space: pre-line; } }
 
-.card__header { text-align: left; padding-bottom: 2em; }
+.card__header { text-align: left; padding-bottom: 0.2rem; }
 
 .card__body { display: -webkit-box; display: -ms-flexbox; display: flex; -webkit-box-orient: vertical; -webkit-box-direction: normal; -ms-flex-direction: column; flex-direction: column; -webkit-box-flex: 1; -ms-flex: 1; flex: 1; }
 
 .card__body-container { margin: 10px; padding: 20px; -webkit-box-flex: 1; -ms-flex: 1 1; flex: 1 1; border-radius: 10px; background-color: rgba(0, 0, 0, 0.1); }
 
 .card__body-container .body-container__item { margin-bottom: 10px; }
+
+@media (max-width: 375px) { .card__body-container { margin: 10px 0; } }
 
 .card__body-header { color: var(--text-dark); text-align: left; font-size: 1.2rem; margin: 0; margin-bottom: 1rem; }
 
@@ -238,4 +242,3 @@ button:hover { color: var(--background); background-color: var(--item-dark___hov
 .segmented_control label:first-of-type { margin-right: 0px; border-radius: 30px 0 0 30px; border-right: none; }
 
 .segmented_control label:last-of-type { margin-left: 0px; border-radius: 0 30px 30px 0; border-left: none; }
-/*# sourceMappingURL=index.css.map */

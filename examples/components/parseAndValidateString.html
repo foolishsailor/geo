@@ -21,14 +21,14 @@
     <div class="input_group">
       <label for="dms_string">DMS String</label>
       <input
-        onfocus="parseAndValidateString.clearInputError(event)"
+        id="pvs_dms_string"
         class="input---block"
         type="text"
         name="dms_string"
         placeholder="Enter string here"
       />
     </div>
-    <button onclick="parseAndValidateString.parseDMS(event)">Go!</button>
+    <button id="pvs_parseDMS">Go!</button>
     <div class="input_group">
       <label for="d_output">Output</label>
       <input

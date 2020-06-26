@@ -1,5 +1,5 @@
 module.exports = {
-  METER_TO_KM: 0.0001,
+  METER_TO_KM: 0.001,
   METER_TO_MILE: 0.000621371,
   METER_TO_NM: 1 / 1852,
 
