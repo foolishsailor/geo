@@ -9,7 +9,6 @@
 .card {
   $border: 10px;
   position: relative;
-  flex-wrap: wrap;
   flex: 1;
   flex-wrap: wrap;
   box-sizing: border-box;
@@ -51,7 +50,7 @@
 
 .card__body {
   display: flex;
-  flex-direction: column;
+  flex-wrap: wrap;
   flex: 1;
 }
 
@@ -107,6 +106,6 @@
   flex: 1 1;
 
   @media all and (max-width: 800px) {
-    flex-direction: column;
+    flex-wrap: wrap;
   }
 }

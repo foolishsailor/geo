@@ -8,7 +8,7 @@
   font-weight: 700;
 
   @media (max-width: $mobile_breakpoint) {
-    flex-direction: column;
+    flex-wrap: wrap;
   }
 
   h1 {
